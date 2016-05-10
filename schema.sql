@@ -46,7 +46,7 @@ CREATE TABLE ainstance (
 
 -- The possible status values for an album
 -- e.g. On Shelf / Checked Out / Reserved / Reference / Lost / Late / Restock Queue
-CREATE TABLE astatus_id (
+CREATE TABLE astatus (
   astatus_id INT(16) PRIMARY KEY AUTO_INCREMENT,
   description VARCHAR(64)
 );
@@ -120,8 +120,15 @@ CREATE TABLE ainstance_user (
   returned DATE
 );
 
--- The user's status: Active / Inactive / Blocked / Fine - Fine Amt.
+-- Possible status: Active / Inactive / Blocked / Fine - Fine Amt.
 CREATE TABLE ustatus (
-  user_id INT(16),
+  ustatus_id INT(2),
+  description VARCHAR(255)
+);
+
+-- User's acutal status and outstanding fine amount, if any
+CREATE TABLE user_ustatus (
+  user_id INT(16) NOT NULL,
+  ustatus_id INT(2) NOT NULL,
   fine DECIMAL(5,2)
-)
+);
