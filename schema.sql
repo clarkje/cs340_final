@@ -6,7 +6,7 @@
 -- Individual tracks may have distinct artist and genre values that differ
 -- total_tracks = track 12 of N
 CREATE TABLE album (
-  album_id INT(16) AUTO_INCREMENT,
+  album_id INT(16) PRIMARY KEY AUTO_INCREMENT,
   artist_id INT(16) NOT NULL,
   genre_id INT(16) NOT NULL,
   name VARCHAR(255),
@@ -38,7 +38,7 @@ CREATE TABLE composer_track (
 -- The library may have multiple copies of an item
 -- ainstance (album instance) tracks the status of each individual copy of an album
 CREATE TABLE ainstance (
-  ainstance_id INT(16) AUTO_INCREMENT,
+  ainstance_id INT(16) PRIMARY KEY AUTO_INCREMENT,
   album_id INT(16) NOT NULL,
   astatus_id INT(2) NOT NULL,
   location VARCHAR(255)
@@ -47,7 +47,7 @@ CREATE TABLE ainstance (
 -- The possible status values for an album
 -- e.g. On Shelf / Checked Out / Reserved / Reference / Lost / Late / Restock Queue
 CREATE TABLE astatus_id (
-  astatus_id INT(16) AUTO_INCREMENT,
+  astatus_id INT(16) PRIMARY KEY AUTO_INCREMENT,
   description VARCHAR(64)
 );
 
@@ -57,7 +57,7 @@ CREATE TABLE astatus_id (
 -- TODO: Where our source data includes lists in the column, we'll need to put those in individual artist records
 
 CREATE TABLE artist (
-  artist_id INT(16) AUTO_INCREMENT,
+  artist_id INT(16) PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL
 );
 
@@ -65,7 +65,7 @@ CREATE TABLE artist (
 -- TODO: Can we specify that AT LEAST ONE of them has to be populated?
 
 CREATE TABLE composer (
-  composer_id INT(16) AUTO_INCREMENT,
+  composer_id INT(16) PRIMARY KEY AUTO_INCREMENT,
   first_name varchar(128),
   last_name varchar(128)
 );
@@ -73,7 +73,7 @@ CREATE TABLE composer (
 -- Tracks can have a single genre and multiple artists and composers
 -- Compilations can include tracks from multiple years
 CREATE TABLE track (
-  track_id INT(32) AUTO_INCREMENT,
+  track_id INT(32) PRIMARY KEY AUTO_INCREMENT,
   genre_id INT(16),
   name VARCHAR(255),
   release_date DATE
@@ -92,7 +92,7 @@ CREATE TABLE track_composer (
 -- Library Users
 -- utype is the type of user: Admin / Patron (Undergrad v. Graduate?) / Clerk / etc.
 CREATE TABLE user (
-  user_id INT(16) AUTO_INCREMENT,
+  user_id INT(16) PRIMARY KEY AUTO_INCREMENT,
   utype_id INT(2) NOT NULL,
   ustatus_id INT(2) NOT NULL,
   first_name VARCHAR(128) NOT NULL,
@@ -102,7 +102,7 @@ CREATE TABLE user (
 
 -- utype is the type of user: Admin / Patron (Undergrad v. Graduate?) / Clerk / etc.
 CREATE TABLE utype (
-  utype_id INT(2) AUTO_INCREMENT,
+  utype_id INT(2) PRIMARY KEY AUTO_INCREMENT,
   description VARCHAR(255)
 );
 
