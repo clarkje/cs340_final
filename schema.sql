@@ -8,7 +8,7 @@
 CREATE TABLE album (
   album_id INT(16) PRIMARY KEY AUTO_INCREMENT,
   artist_id INT(16) NOT NULL,
-  genre_id INT(16) NOT NULL,
+  genre_id INT(4) NOT NULL,
   name VARCHAR(255),
   release_date DATE,
   total_tracks INT(2)
@@ -74,7 +74,7 @@ CREATE TABLE composer (
 -- Compilations can include tracks from multiple years
 CREATE TABLE track (
   track_id INT(32) PRIMARY KEY AUTO_INCREMENT,
-  genre_id INT(16),
+  genre_id INT(4),
   name VARCHAR(255),
   release_date DATE
 );
@@ -87,6 +87,11 @@ CREATE TABLE track_artist (
 CREATE TABLE track_composer (
   track_id INT(32) NOT NULL,
   composer_id INT(16) NOT NULL
+)
+
+CREATE TABLE genre (
+  genre_id INT(4) PRIMARY KEY AUTO_INCREMENT,
+  description varchar(255)
 )
 
 -- Library Users
