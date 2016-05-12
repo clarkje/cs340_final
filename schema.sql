@@ -5,34 +5,17 @@
 -- An album has a headlining artist and genre
 -- Individual tracks may have distinct artist and genre values that differ
 -- total_tracks = track 12 of N
+-- The combination of artist and album name should be distinct
 CREATE TABLE album (
   album_id INT(16) PRIMARY KEY AUTO_INCREMENT,
   artist_id INT(16) NOT NULL,
   genre_id INT(4) NOT NULL,
   name VARCHAR(255),
   release_date DATE,
-  total_tracks INT(2)
-);
-
--- Sometimes the same track appears on multiple albums
--- (Compilations, Soundtracks, etc)
--- track_number = track N of 12
-CREATE TABLE album_track (
-  album_id INT(16) NOT NULL,
-  track_id INT(32) NOT NULL,
-  track_number INT(2)
-);
-
--- A track may have multiple artists
-CREATE TABLE artist_track (
-  artist_id INT(16) NOT NULL,
-  track_id INT(32) NOT NULL
-);
-
--- A track may have multiple composers
-CREATE TABLE composer_track (
-  composer_id INT(16) NOT NULL,
-  track_id INT(32) NOT NULL
+  total_tracks INT(2),
+  CONSTRAINT album_unqiue_name_artist UNIQUE (name, artist_id),
+  FOREIGN KEY (artist_id) REFERENCES artist (artist_id),
+  FOREIGN KEY (genre_id) REFERENCES genre (genre_id)
 );
 
 -- The library may have multiple copies of an item
@@ -72,27 +55,36 @@ CREATE TABLE composer (
 
 -- Tracks can have a single genre and multiple artists and composers
 -- Compilations can include tracks from multiple years
-CREATE TABLE track (
-  track_id INT(32) PRIMARY KEY AUTO_INCREMENT,
-  genre_id INT(4),
-  name VARCHAR(255),
-  release_date DATE
-);
+  CREATE TABLE track (
+    track_id INT(32) PRIMARY KEY AUTO_INCREMENT,
+    album_id INT(16),
+    genre_id INT(4),
+    name VARCHAR(255),
+    release_date DATE,
+    track_num INT(2),
+    CONSTRAINT unique_track_name_album UNIQUE (name, album_id),
+    FOREIGN KEY (genre_id) REFERENCES genre (genre_id),
+    FOREIGN KEY (album_id) REFERENCES album (album_id)
+  );
 
 CREATE TABLE track_artist (
   track_id INT(32) NOT NULL,
-  artist_id INT(16) NOT NULL
+  artist_id INT(16) NOT NULL,
+  FOREIGN KEY (track_id) REFERENCES track (track_id),
+  FOREIGN KEY (artist_id) REFERENCES artist (artist_id)
 );
 
 CREATE TABLE track_composer (
   track_id INT(32) NOT NULL,
-  composer_id INT(16) NOT NULL
-)
+  composer_id INT(16) NOT NULL,
+  FOREIGN KEY (track_id) REFERENCES track (track_id),
+  FOREIGN KEY (composer_id) REFERENCES composer (composer_id)
+);
 
 CREATE TABLE genre (
   genre_id INT(4) PRIMARY KEY AUTO_INCREMENT,
   description varchar(255)
-)
+);
 
 -- Library Users
 -- utype is the type of user: Admin / Patron (Undergrad v. Graduate?) / Clerk / etc.
