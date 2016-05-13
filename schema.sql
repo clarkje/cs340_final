@@ -46,6 +46,7 @@ CREATE TABLE artist (
 
 -- Sometimes we only have first names (Cher) and sometimes last names (Haydn)
 -- TODO: Can we specify that AT LEAST ONE of them has to be populated?
+--Completed,AK
 
 CREATE TABLE composer (
   composer_id INT(16) PRIMARY KEY AUTO_INCREMENT,
