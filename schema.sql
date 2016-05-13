@@ -50,7 +50,8 @@ CREATE TABLE artist (
 CREATE TABLE composer (
   composer_id INT(16) PRIMARY KEY AUTO_INCREMENT,
   first_name varchar(128),
-  last_name varchar(128)
+  last_name varchar(128),
+  CHECK (first_name IS NOT NULL OR last_name IS NOT NULL)
 );
 
 -- Tracks can have a single genre and multiple artists and composers
