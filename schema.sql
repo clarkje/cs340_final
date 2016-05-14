@@ -24,7 +24,10 @@ CREATE TABLE ainstance (
   ainstance_id INT(16) PRIMARY KEY AUTO_INCREMENT,
   album_id INT(16) NOT NULL,
   astatus_id INT(2) NOT NULL,
-  location VARCHAR(255)
+  location VARCHAR(255),
+  FOREIGN KEY (astatus_id) REFERENCES astatus (astatus_id),
+  FOREIGN KEY (album_id) REFERENCES album (album_id)
+
 );
 
 -- The possible status values for an album
@@ -97,7 +100,9 @@ CREATE TABLE user (
   first_name VARCHAR(128) NOT NULL,
   last_name VARCHAR(128) NOT NULL,
   email VARCHAR(255) NOT NULL,
-)
+  FOREIGN KEY (utype_id) REFERENCES utype (utype_id),
+  FOREIGN KEY (ustatus_id) REFERENCES ustatus (ustatus_id)
+);
 
 -- utype is the type of user: Admin / Patron (Undergrad v. Graduate?) / Clerk / etc.
 CREATE TABLE utype (
@@ -111,7 +116,8 @@ CREATE TABLE ainstance_user (
   ainstance_id INT(16),
   checked_out DATE,
   due_by DATE,
-  returned DATE
+  returned DATE,
+  FOREIGN KEY (user_id) REFERENCES user (user_id)
 );
 
 -- Possible status: Active / Inactive / Blocked / Fine - Fine Amt.
