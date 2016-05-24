@@ -3,12 +3,14 @@
 ini_set('display_errors', 'On');
 
 //Connects to the database
-$mysqli = new mysqli("oniddb.cws.oregonstate.edu","clarkje-db","9mbj026jOGfRusf4","clarkje-db");
+// $mysqli = new mysqli("oniddb.cws.oregonstate.edu","clarkje-db","9mbj026jOGfRusf4","clarkje-db");
+
+$mysqli = new mysqli("localhost","root","root","clarkje-db");
 if($mysqli->connect_errno){
 	echo "Connection error " . $mysqli->connect_errno . " " . $mysqli->connect_error;
 }
 
-switch($_POST['action']) {
+switch(isset($_POST['action'])) {
   case "addAlbum":
 
   break;
