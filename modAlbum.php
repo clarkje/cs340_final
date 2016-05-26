@@ -1,6 +1,15 @@
 <?php
 ini_set('display_errors', 'On');
 
+// Setup the MySQL Connection
+require('config/mysql.php');
+$mysqli = new mysqli($db_host,$db_user,$db_pass,$db_schema);
+
+if($mysqli->connect_errno){
+	echo "Connection error " . $mysqli->connect_errno . " " . $mysqli->connect_error;
+}
+
+// Setup the Template Engine
 // Adapted from "Using all the options" Mustache Example at:
 // https://github.com/bobthecow/mustache.php/wiki
 require './lib/mustache/src/Mustache/Autoloader.php';
@@ -20,18 +29,7 @@ $mustache = new Mustache_Engine(array(
     'strict_callables' => true,
     'pragmas' => [Mustache_Engine::PRAGMA_FILTERS],
 ));
-
 $tpl = $mustache->loadTemplate('addAlbum');
-
-require('conf/mysql.php');
-$mysqli = new mysqli($db_host,$db_user,$db_pass,$db_schema);
-
-if($mysqli->connect_errno){
-	echo "Connection error " . $mysqli->connect_errno . " " . $mysqli->connect_error;
-}
-
-// Optional alert message that would be displayed above the form
-$alert = "";
 
 // $_REQUEST is the method agnostic version of $_GET or $_POST
 switch(isset($_REQUEST['action'])) {

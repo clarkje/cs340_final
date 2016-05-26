@@ -1,9 +1,15 @@
 <?php
 ini_set('display_errors', 'On');
 
-// Use mustache templates for sanity
+// Setup the MySQL connection
+require('config/mysql.php');
+$mysqli = new mysqli($db_host,$db_user,$db_pass,$db_schema);
 
+if($mysqli->connect_errno){
+	echo "Connection error " . $mysqli->connect_errno . " " . $mysqli->connect_error;
+}
 
+// Setup the template engine
 require './lib/mustache/src/Mustache/Autoloader.php';
 Mustache_Autoloader::register();
 
@@ -21,17 +27,8 @@ $mustache = new Mustache_Engine(array(
     'strict_callables' => true,
     'pragmas' => [Mustache_Engine::PRAGMA_FILTERS],
 ));
+$tpl = $mustache->loadTemplate('browseAlbum');
 
-
-$tpl = $mustache->loadTemplate('browseAlbum'); // loads __DIR__.'/views/foo.mustache';
-
-// $mysqli = new mysqli("oniddb.cws.oregonstate.edu","clarkje-db","9mbj026jOGfRusf4","clarkje-db");
-$mysqli = new mysqli("localhost","root","root","clarkje-db");
-
-
-if($mysqli->connect_errno){
-	echo "Connection error " . $mysqli->connect_errno . " " . $mysqli->connect_error;
-}
 
 function getAlbums($mysqli) {
 
@@ -69,50 +66,51 @@ function getAlbums($mysqli) {
         "total_tracks" => $total_tracks
     );
 
-    // Get the tracks for the album
-    $track_query = "SELECT track.track_id, track.name, track.genre_id,
-                           track.release_date, track.track_num,
-                           artist.name, composer.first_name, composer.last_name
-                    FROM track
-                    INNER JOIN track_artist ON track_artist.track_id = track.track_id
-                    INNER JOIN artist ON track_artist.artist_id = artist.artist_id
-                    INNER JOIN track_composer ON track_composer.track_id = track.track_id
-                    INNER JOIN composer ON track_composer.composer_id = composer.composer_id
-                    WHERE album_id = ?";
-
-
-    if(!($track_stmt = $mysqli->prepare($track_query))){
-      echo "Prepare failed: "  . $mysqli->errno . " " . $mysqli->error;
-    }
-    $track_stmt->bind_param("i", $album_id);
-    $track_stmt->execute();
-    $track_stmt->bind_result($track_id, $track_name, $genre_id, $release_date,
-    $track_num, $artist_name, $composer_first_name, $composer_last_name);
-    $track_stmt->store_result();
-
-    $tracks = array();
-    while($track_stmt->fetch()) {
-      $tracks[] = array(
-          "track_id" => $track_id,
-          "track_name" => $track_name,
-          "genre_id" => $genre_id,
-          "release_date" => $release_date,
-          "track_num" => $track_num,
-          "artist_name" => $artist_name,
-          "composer_first_name" => $composer_first_name,
-          "composer_last_name" => $composer_last_name
-      );
-    }
-
-    $result[$i]["tracks"] = $tracks;
+    $result[$i]["tracks"] = getTracks($mysqli, $album_id);
     $i++;
   }
-
   return $result;
 }
 
+function getTracks($mysqli, $album_id) {
+
+  // Get the tracks for the album
+  $track_query = "SELECT track.track_id, track.name, track.genre_id,
+                         track.release_date, track.track_num,
+                         artist.name, composer.first_name, composer.last_name
+                  FROM track
+                  INNER JOIN track_artist ON track_artist.track_id = track.track_id
+                  INNER JOIN artist ON track_artist.artist_id = artist.artist_id
+                  INNER JOIN track_composer ON track_composer.track_id = track.track_id
+                  INNER JOIN composer ON track_composer.composer_id = composer.composer_id
+                  WHERE album_id = ?";
+
+  if(!($track_stmt = $mysqli->prepare($track_query))){
+    echo "Prepare failed: "  . $mysqli->errno . " " . $mysqli->error;
+  }
+  $track_stmt->bind_param("i", $album_id);
+  $track_stmt->execute();
+  $track_stmt->bind_result($track_id, $track_name, $genre_id, $release_date,
+  $track_num, $artist_name, $composer_first_name, $composer_last_name);
+  $track_stmt->store_result();
+
+  $tracks = array();
+  while($track_stmt->fetch()) {
+    $tracks[] = array(
+        "track_id" => $track_id,
+        "track_name" => $track_name,
+        "genre_id" => $genre_id,
+        "release_date" => $release_date,
+        "track_num" => $track_num,
+        "artist_name" => $artist_name,
+        "composer_first_name" => $composer_first_name,
+        "composer_last_name" => $composer_last_name
+    );
+  }
+  return $tracks;
+}
+
 $result = getAlbums($mysqli);
-var_dump($result);
 
 echo $tpl->render(array('albums' => $result));
 ?>
