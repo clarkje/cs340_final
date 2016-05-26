@@ -30,6 +30,7 @@ $mustache = new Mustache_Engine(array(
     'pragmas' => [Mustache_Engine::PRAGMA_FILTERS],
 ));
 $tpl = $mustache->loadTemplate('addAlbum');
+$context = array();
 
 // $_REQUEST is the method agnostic version of $_GET or $_POST
 switch(isset($_REQUEST['action'])) {
@@ -60,6 +61,9 @@ switch(isset($_REQUEST['action'])) {
 		}
 
 		$stmt->close();
+
+		$context['genres'] = $genres;
+
   break;
 	case "editAlbum":
 		// Populate the form with existing data
@@ -75,6 +79,13 @@ switch(isset($_REQUEST['action'])) {
 		$stmt->bind_param("i",$_POST['album_id']);
 		$stmt->execute();
 		$stmt->bind_result($album_id, $artist_id, $genre_id, $release_date, $total_tracks);
+
+		$context['genres'] = $genres;
+		$context['album_id'] = $album_id;
+		$context['artist_id'] = $artist_id;
+		$context['genre_id'] = $genre_id;
+		$context['release_date'] = $release_date;
+		$context['total_tracks'] = $total_tracks;
 
 	break;
 }
@@ -98,9 +109,6 @@ while($stmt->fetch()) {
 }
 
 // Populate the variables to pass to the template
-
-$context = array();
-$context['genres'] = $genres;
 
 if (isset($alert)) {
 	$context['alert'] = $alert;
