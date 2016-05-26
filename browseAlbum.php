@@ -31,7 +31,7 @@ $tpl = $mustache->loadTemplate('browseAlbum');
 
 // Include the albums class
 require_once('./albums.php');
-$album = new Album($mysqli);
+$album = new albumQuery($mysqli);
 
 $result = $album->getAlbum();
 

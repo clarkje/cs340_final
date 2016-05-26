@@ -1,6 +1,6 @@
 <?php
 
-class album {
+class albumQuery {
 
   private $mysqli = null;
 
