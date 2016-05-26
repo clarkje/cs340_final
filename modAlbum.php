@@ -32,11 +32,17 @@ $mustache = new Mustache_Engine(array(
 $tpl = $mustache->loadTemplate('addAlbum');
 $context = array();
 
+// Get the list of genres for the dropdown
+require_once('genreQuery.php');
+$genre = new genreQuery($mysqli);
+$context['genres'] = $genre->getGenres();
+
 // $_REQUEST is the method agnostic version of $_GET or $_POST
 switch(isset($_REQUEST['action'])) {
 
 	// Process the form submission
   case "addAlbum":
+
 		$query = "INSERT INTO album
 								(album_id, artist_id, genre_id, name, release_date, total_tracks)
 								VALUES
@@ -90,31 +96,11 @@ switch(isset($_REQUEST['action'])) {
 	break;
 }
 
-// Get the list of genres for the dropdown
-
-$query = "SELECT genre_id, description FROM genre";
-if(!($stmt = $mysqli->prepare($query))){
-	echo "Prepare failed: "  . $stmt->errno . " " . $stmt->error;
-}
-
-$stmt->execute();
-$stmt->bind_result($genre_id, $description);
-
-$i = 0;
-$genres = array();
-while($stmt->fetch()) {
-	$genres[$i] = array("genre_id" => $genre_id,
-											"description" => $description);
-	$i++;
-}
-
 // Populate the variables to pass to the template
 
 if (isset($alert)) {
 	$context['alert'] = $alert;
 }
-
-
 
 echo $tpl->render($context);
 ?>
