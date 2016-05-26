@@ -1,7 +1,8 @@
 <?php
 ini_set('display_errors', 'On');
 
-
+// Adapted from "Using all the options" Mustache Example at:
+// https://github.com/bobthecow/mustache.php/wiki
 require './lib/mustache/src/Mustache/Autoloader.php';
 Mustache_Autoloader::register();
 
@@ -22,9 +23,8 @@ $mustache = new Mustache_Engine(array(
 
 $tpl = $mustache->loadTemplate('addAlbum');
 
-
-// $mysqli = new mysqli("oniddb.cws.oregonstate.edu","clarkje-db","9mbj026jOGfRusf4","clarkje-db");
-$mysqli = new mysqli("localhost","root","root","clarkje-db");
+require('conf/mysql.php');
+$mysqli = new mysqli($db_host,$db_user,$db_pass,$db_schema);
 
 if($mysqli->connect_errno){
 	echo "Connection error " . $mysqli->connect_errno . " " . $mysqli->connect_error;
@@ -33,7 +33,10 @@ if($mysqli->connect_errno){
 // Optional alert message that would be displayed above the form
 $alert = "";
 
-switch(isset($_POST['action'])) {
+// $_REQUEST is the method agnostic version of $_GET or $_POST
+switch(isset($_REQUEST['action'])) {
+
+	// Process the form submission
   case "addAlbum":
 		$query = "INSERT INTO album
 								(album_id, artist_id, genre_id, name, release_date, total_tracks)
@@ -60,7 +63,25 @@ switch(isset($_POST['action'])) {
 
 		$stmt->close();
   break;
+	case "editAlbum":
+		// Populate the form with existing data
+
+		$query = "SELECT album_id, artist_id, genre_id, name, release_date, total_tracks
+							FROM album
+							WHERE album_id = ?";
+
+		if(!($stmt = $mysqli->prepare($query))){
+			echo "Prepare failed: "  . $mysqli->errno . " " . $mysqli->error;
+		}
+
+		$stmt->bind_param("i",$_POST['album_id']);
+		$stmt->execute();
+		$stmt->bind_result($album_id, $artist_id, $genre_id, $release_date, $total_tracks);
+
+	break;
 }
+
+// Get the list of genres for the dropdown
 
 $query = "SELECT genre_id, description FROM genre";
 if(!($stmt = $mysqli->prepare($query))){
@@ -78,5 +99,16 @@ while($stmt->fetch()) {
 	$i++;
 }
 
-echo $tpl->render(array('genres' => $genres, 'alert' => $alert));
+// Populate the variables to pass to the template
+
+$context = array();
+$context['genres'] = $genres;
+
+if (isset($alert)) {
+	$context['alert'] = $alert;
+}
+
+
+
+echo $tpl->render($context);
 ?>

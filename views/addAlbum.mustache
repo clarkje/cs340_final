@@ -70,14 +70,14 @@
 		      <p>
 						<div class="form-group">
 			        <label for="artist">Artist: </label>
-			        <input name="artist" class="form-control" value="" id="artist" placeholder="Artist Name">
+			        <input name="artist" class="form-control" value="" id="artist" placeholder="Artist Name" value="{{artist}}">
 					</div>
-					<input type="hidden" name="artist_id" value="" id="artist_id">
+					<input type="hidden" name="artist_id" value="{{artist_id}}" id="artist_id">
 		      </p>
 					<p>
 						<div class="form-group">
 			        <label for="genre">Genre: </label>
-							<select class="form-control" name="genre">
+							<select class="form-control" name="genre" selected="{{genre_id}}">
                 {{#genres}}
                   <option value="{{genre_id}}">{{description}}</option>
                 {{/genres}}
@@ -91,9 +91,9 @@
 							on these form fields.  -->
 
 						  <label for="release_date">Release Year:</label>
-			        <input type="number" min="1900" max="2016" name="release_date" class="form-control" value="" id="release_date">
+			        <input type="number" min="1900" max="2016" name="release_date" class="form-control" value="{{release_date}}" id="release_date">
 				      <label for="total_tracks">Total Tracks:</label>
-			        <input type="number" min="1" max="99" name="total_tracks" class="form-control" value="" id="total_tracks">
+			        <input type="number" min="1" max="99" name="total_tracks" class="form-control" value="{{total_tracks}}" id="total_tracks">
 						</div>
 		      </p>
 					  <input type="submit" class="btn btn-primary btn-lg" value="Add Album">
