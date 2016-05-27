@@ -2,7 +2,7 @@
 ini_set('display_errors', 'On');
 
 // Setup the MySQL Connection
-require('config/mysql.php');
+require_once('config/mysql.php');
 $mysqli = new mysqli($db_host,$db_user,$db_pass,$db_schema);
 
 if($mysqli->connect_errno){
@@ -12,7 +12,7 @@ if($mysqli->connect_errno){
 // Setup the Template Engine
 // Adapted from "Using all the options" Mustache Example at:
 // https://github.com/bobthecow/mustache.php/wiki
-require './lib/mustache/src/Mustache/Autoloader.php';
+require_once('./lib/mustache/src/Mustache/Autoloader.php');
 Mustache_Autoloader::register();
 
 $mustache = new Mustache_Engine(array(
@@ -37,63 +37,45 @@ require_once('genreQuery.php');
 $genre = new genreQuery($mysqli);
 $context['genres'] = $genre->getGenres();
 
-// $_REQUEST is the method agnostic version of $_GET or $_POST
-switch(isset($_REQUEST['action'])) {
+// We're modifying data, include the accessor class
+if (isset($_REQUEST['action'])) {
+	require_once('albumQuery.php');
+	$album = new albumQuery($mysqli);
 
-	// Process the form submission
-  case "addAlbum":
+	// $_REQUEST is the method agnostic version of $_GET or $_POST
+	switch($_REQUEST['action']) {
 
-		$query = "INSERT INTO album
-								(album_id, artist_id, genre_id, name, release_date, total_tracks)
-								VALUES
-								(?,?,?,?,?,?)";
+		// Process the form submission
+	  case "addAlbum":
 
-		if(!($stmt = $mysqli->prepare($query))){
-			echo "Prepare failed: "  . $mysqli->errno . " " . $mysqli->error;
-		}
+			$error = $album->insertAlbum(
+									$_POST['artist_id'], $_POST['genre'],$_POST['name'],
+									$_POST['release_date'], $_POST['total_tracks']);
 
-		$rdate = $_POST['release_date'].'-01-01';
+			if(!$error) {
+				$alert = "<div class='alert alert-success' role='alert'>Album Added Successfully</div>";
+			} else {
+				$alert = "<div class='alert alert-danger' role='alert'>Album Add Failed</div>";
+			}
 
-		$stmt->bind_param("iiissi",$_POST['album_id'],$_POST['artist_id'],
-							$_POST['genre'],$_POST['name'],$rdate,
-							$_POST['total_tracks']);
+	  break;
 
-		$stmt->execute();
+		case "editAlbum":
+			// Populate the form with existing data
 
-		if(!$mysqli->error) {
-			$alert = "<div class='alert alert-success' role='alert'>Album Added Successfully</div>";
-		} else {
-			$alert = "<div class='alert alert-danger' role='alert'>Album Add Failed</div>";
-		}
+			$result = $album->getAlbum($_REQUEST['album_id']);
 
-		$stmt->close();
+			$context['album_id'] = $result[0]['album_id'];
+			$context['album_name'] = $result[0]['album_name'];
+			$context['artist_id'] = $result[0]['artist_id'];
+			$context['artist_name'] = $result[0]['artist_name'];
+			$context['genre_id'] = $result[0]['genre_id'];
+			$context['release_date'] = $result[0]['release_date'];
+			$context['rel_year'] = $result[0]['rel_year'];
+			$context['total_tracks'] = $result[0]['total_tracks'];
 
-		$context['genres'] = $genres;
-
-  break;
-	case "editAlbum":
-		// Populate the form with existing data
-
-		$query = "SELECT album_id, artist_id, genre_id, name, release_date, total_tracks
-							FROM album
-							WHERE album_id = ?";
-
-		if(!($stmt = $mysqli->prepare($query))){
-			echo "Prepare failed: "  . $mysqli->errno . " " . $mysqli->error;
-		}
-
-		$stmt->bind_param("i",$_POST['album_id']);
-		$stmt->execute();
-		$stmt->bind_result($album_id, $artist_id, $genre_id, $release_date, $total_tracks);
-
-		$context['genres'] = $genres;
-		$context['album_id'] = $album_id;
-		$context['artist_id'] = $artist_id;
-		$context['genre_id'] = $genre_id;
-		$context['release_date'] = $release_date;
-		$context['total_tracks'] = $total_tracks;
-
-	break;
+		break;
+	}
 }
 
 // Populate the variables to pass to the template

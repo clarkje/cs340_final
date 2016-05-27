@@ -30,7 +30,7 @@ $mustache = new Mustache_Engine(array(
 $tpl = $mustache->loadTemplate('browseAlbum');
 
 // Include the albums class
-require_once('./albums.php');
+require_once('./albumQuery.php');
 $album = new albumQuery($mysqli);
 
 $result = $album->getAlbum();

@@ -8,10 +8,37 @@ class albumQuery {
     $this->mysqli = $mysqli;
   }
 
+  function insertAlbum($artist_id, $genre_id, $album_name, $release_date, $total_tracks) {
+
+      $query = "INSERT INTO album
+                  (artist_id, genre_id, name, release_date, total_tracks)
+                VALUES
+                  (?,?,?,?,?)";
+
+      if(!($stmt = $this->mysqli->prepare($query))){
+        echo "Prepare failed: "  . $this->mysqli->errno . " " . $this->mysqli->error;
+      }
+
+      $rdate = $_POST['release_date'].'-01-01';
+
+      $stmt->bind_param("iissi",$artist_id,$genre_id,$album_name,$rdate,$total_tracks);
+
+      $stmt->execute();
+
+      if(isset($this->mysqli->error)) {
+        return $this->mysqli->error;
+      } else {
+        return null;
+      }
+
+      $stmt->close();
+
+  }
+
   // Returns an array of albums and their tracks
   function getAlbum($album_id = -1) {
 
-    $query = "SELECT album_id, artist.name, genre.description, album.name, release_date, total_tracks
+    $query = "SELECT album_id, artist.name, album.artist_id, genre.description, album.genre_id, album.name, release_date, total_tracks
                 FROM album
                 INNER JOIN artist ON album.artist_id = artist.artist_id
                 INNER JOIN genre ON album.genre_id = genre.genre_id
@@ -30,7 +57,7 @@ class albumQuery {
   	}
 
     $stmt->execute();
-    $stmt->bind_result($album_id, $artist_name, $genre_desc, $album_name, $release_date, $total_tracks);
+    $stmt->bind_result($album_id, $artist_name, $artist_id, $genre_desc, $genre_id, $album_name, $release_date, $total_tracks);
     $stmt->store_result();
 
     $i = 0;
@@ -42,8 +69,11 @@ class albumQuery {
 
       $result[$i] = array(
           "album_id" => $album_id,
+          "album_name" => $album_name,
           "artist_name" => $artist_name,
+          "artist_id" => $artist_id,
           "genre_desc" => $genre_desc,
+          "genre_id" => $genre_id,
           "album_name" => $album_name,
           "release_date" => $release_date,
           "rel_year" => $rel_year,
@@ -53,6 +83,15 @@ class albumQuery {
       $result[$i]["tracks"] = $this->getTracks($album_id);
       $i++;
     }
+
+    // HACK: If this were a real application, exceptions would be good here.
+    // Since no data is being modified, I'm just going to punt and return null
+    // if the query fails.
+    if ($this->mysqli->error) {
+      return null;
+    }
+
+    $stmt->close();
     return $result;
   }
 
@@ -92,6 +131,7 @@ class albumQuery {
           "composer_last_name" => $composer_last_name
       );
     }
+    $track_stmt->close();
     return $tracks;
   }
 
