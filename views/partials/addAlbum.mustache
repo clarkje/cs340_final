@@ -1,0 +1,64 @@
+<fieldset>
+  <legend>Add Album</legend>
+  <form method="post" action="modAlbum.php">
+    {{#album_id}}
+    <input type="hidden" name="action" value="updateAlbum">
+    <input type="hidden" name="action" value="{{album_id}}">
+    {{/album_id}}
+    {{^album_id}}
+      <input type="hidden" name="action" value="addAlbum">
+    {{/album_id}}
+
+    <div class="form-group">
+      <label for="album_name">Album Name:</label>
+      <input type="text" class="form-control" id="name" value="{{album_name}}">
+    </div>
+
+    <!--
+    <p>
+      <div class="form-group">
+        <label for="composer">Composer: </label>
+        <input name="composer" class="form-control" value="" id="composer" placeholder="Composer Name">
+      </div>
+      <input type="hidden" name="composer_id" value="" id="composer_id">
+    </p>
+    -->
+
+    <p>
+      <div class="form-group">
+        <label for="artist">Artist: </label>
+        <!-- HACK: I'm cheating with placeholder to display the already selected artist's name.
+                  I tried (and failed) to fix this by issuing jQuery statments.  I'm sure there's a way, but it's non-trivial.
+                  This will actually work as-is, and the only side-effect is the grey text.  Just not what I wanted... 
+        -->
+        <input name="artist" class="form-control" value="" id="artist" placeholder="{{artist_name}}" value="{{artist_name}}">
+    </div>
+    <input type="hidden" name="artist_id" value="{{artist_id}}" id="artist_id">
+    </p>
+    <p>
+      <div class="form-group">
+        <label for="genre">Genre: </label>
+
+        <!-- TODO: JavaScript function that selects the chosen option element when editing -->
+        <select class="form-control" name="genre">
+          {{#genres}}
+            <option>{{description}}</option>
+          {{/genres}}
+        </select>
+    </div>
+    </p>
+    <p>
+      <div class="form-group">
+
+        <!-- TODO: I can't figure out hot to restrict input to 2 or 4 digits
+        on these form fields.  -->
+
+        <label for="release_date">Release Year:</label>
+        <input type="number" min="1900" max="2016" name="release_date" class="form-control" value="{{rel_year}}" id="release_date">
+        <label for="total_tracks">Total Tracks:</label>
+        <input type="number" min="1" max="99" name="total_tracks" class="form-control" value="{{total_tracks}}" id="total_tracks">
+      </div>
+    </p>
+      <input type="submit" class="btn btn-primary btn-lg" value="Add Album">
+  </form>
+</fieldset>

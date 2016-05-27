@@ -48,56 +48,9 @@
 <body>
 		<div class="container">
       {{{alert}}}
-		  <fieldset>
-				<legend>Add Album</legend>
-		    <form method="post" action="addAlbum.php">
-		      <input type="hidden" name="action" value="addAlbum">
-					<div class="form-group">
-						<label for="album_name">Album Name:</label>
-			      <input type="text" class="form-control" id="name" name="name">
-					</div>
-
-					<!--
-		      <p>
-						<div class="form-group">
-			        <label for="composer">Composer: </label>
-			        <input name="composer" class="form-control" value="" id="composer" placeholder="Composer Name">
-						</div>
-						<input type="hidden" name="composer_id" value="" id="composer_id">
-		      </p>
-					-->
-
-		      <p>
-						<div class="form-group">
-			        <label for="artist">Artist: </label>
-			        <input name="artist" class="form-control" value="" id="artist" placeholder="Artist Name" value="{{artist}}">
-					</div>
-					<input type="hidden" name="artist_id" value="{{artist_id}}" id="artist_id">
-		      </p>
-					<p>
-						<div class="form-group">
-			        <label for="genre">Genre: </label>
-							<select class="form-control" name="genre" selected="{{genre_id}}">
-                {{#genres}}
-                  <option value="{{genre_id}}">{{description}}</option>
-                {{/genres}}
-							</select>
-					</div>
-		      </p>
-					<p>
-						<div class="form-group">
-
-							<!-- TODO: I can't figure out hot to restrict input to 2 or 4 digits
-							on these form fields.  -->
-
-						  <label for="release_date">Release Year:</label>
-			        <input type="number" min="1900" max="2016" name="release_date" class="form-control" value="{{release_date}}" id="release_date">
-				      <label for="total_tracks">Total Tracks:</label>
-			        <input type="number" min="1" max="99" name="total_tracks" class="form-control" value="{{total_tracks}}" id="total_tracks">
-						</div>
-		      </p>
-					  <input type="submit" class="btn btn-primary btn-lg" value="Add Album">
-		    </form>
-		  </fieldset>
+		  {{>addAlbum}}
+      {{#tracks}}
+        {{>tracks}}
+      {{/tracks}}
 		</div>
 </body>
