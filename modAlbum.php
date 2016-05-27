@@ -60,6 +60,21 @@ if (isset($_REQUEST['action'])) {
 
 	  break;
 
+		case "updateAlbum":
+
+			$error = $album->updateAlbum(
+				$_POST['album_id'],$_POST['artist_id'],$_POST['genre'],
+				$_POST['name'],$_POST['release_date'],$_POST['total_tracks']
+			);
+
+			if(!$error) {
+				$alert = "<div class='alert alert-success' role='alert'>Album Updated Successfully</div>";
+			} else {
+				$alert = "<div class='alert alert-danger' role='alert'>Album Update Failed</div>";
+			}
+
+			// Intentionally falls through
+
 		case "editAlbum":
 			// Populate the form with existing data
 
@@ -75,6 +90,7 @@ if (isset($_REQUEST['action'])) {
 			$context['total_tracks'] = $result[0]['total_tracks'];
 
 		break;
+
 	}
 }
 

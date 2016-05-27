@@ -8,6 +8,39 @@ class albumQuery {
     $this->mysqli = $mysqli;
   }
 
+
+  // Updates the album record identified by album_id
+  function updateAlbum($album_id, $artist_id, $genre_id, $album_name, $release_year, $total_tracks) {
+
+    $query = "UPDATE album SET
+              artist_id = ?,
+              genre_id = ?,
+              album_name = ?,
+              release_date = ?,
+              total_tracks = ?,
+              WHERE album_id = ?
+    ";
+
+    if(!($stmt = $this->mysqli->prepare($query))){
+      echo "Prepare failed: "  . $this->mysqli->errno . " " . $this->mysqli->error;
+    }
+
+    $release_date = $release_year.'-01-01';
+
+    $stmt->bind_param("iissii", $album_id, $artist_id, $genre_id, $album_name,
+              $release_date, $total_tracks);
+
+    if (isset($mysqli->error)) {
+      return $mysqli->error;
+    } else {
+      return null;
+    }
+
+    $stmt->close();
+
+  }
+
+  // Inserts a new album record into the database
   function insertAlbum($artist_id, $genre_id, $album_name, $release_date, $total_tracks) {
 
       $query = "INSERT INTO album

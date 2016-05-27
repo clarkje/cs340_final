@@ -1,9 +1,10 @@
 <fieldset>
-  <legend>Add Album</legend>
+  <legend>{{#album_id}}Update{{/album_id}}{{^album_id}}Add{{/album_id}} Album</legend>
   <form method="post" action="modAlbum.php">
+
     {{#album_id}}
     <input type="hidden" name="action" value="updateAlbum">
-    <input type="hidden" name="action" value="{{album_id}}">
+    <input type="hidden" name="album_id" value="{{album_id}}">
     {{/album_id}}
     {{^album_id}}
       <input type="hidden" name="action" value="addAlbum">
@@ -11,25 +12,15 @@
 
     <div class="form-group">
       <label for="album_name">Album Name:</label>
-      <input type="text" class="form-control" id="name" value="{{album_name}}">
+      <input class="form-control" id="name" name="name" value="{{album_name}}">
     </div>
-
-    <!--
-    <p>
-      <div class="form-group">
-        <label for="composer">Composer: </label>
-        <input name="composer" class="form-control" value="" id="composer" placeholder="Composer Name">
-      </div>
-      <input type="hidden" name="composer_id" value="" id="composer_id">
-    </p>
-    -->
 
     <p>
       <div class="form-group">
         <label for="artist">Artist: </label>
         <!-- HACK: I'm cheating with placeholder to display the already selected artist's name.
                   I tried (and failed) to fix this by issuing jQuery statments.  I'm sure there's a way, but it's non-trivial.
-                  This will actually work as-is, and the only side-effect is the grey text.  Just not what I wanted... 
+                  This will actually work as-is, and the only side-effect is the grey text.  Just not what I wanted...
         -->
         <input name="artist" class="form-control" value="" id="artist" placeholder="{{artist_name}}" value="{{artist_name}}">
     </div>
@@ -59,6 +50,6 @@
         <input type="number" min="1" max="99" name="total_tracks" class="form-control" value="{{total_tracks}}" id="total_tracks">
       </div>
     </p>
-      <input type="submit" class="btn btn-primary btn-lg" value="Add Album">
+      <input type="submit" class="btn btn-primary btn-lg" value="{{#album_id}}Update{{/album_id}}{{^album_id}}Add{{/album_id}} Album">
   </form>
 </fieldset>
