@@ -3,6 +3,7 @@ ini_set('display_errors', 'On');
 
 // Setup the MySQL Connection
 require_once('config/mysql.php');
+
 $mysqli = new mysqli($db_host,$db_user,$db_pass,$db_schema);
 
 if($mysqli->connect_errno){
@@ -29,7 +30,7 @@ $mustache = new Mustache_Engine(array(
     'strict_callables' => true,
     'pragmas' => [Mustache_Engine::PRAGMA_FILTERS],
 ));
-$tpl = $mustache->loadTemplate('addAlbum');
+$tpl = $mustache->loadTemplate('manageAlbum');
 $context = array();
 
 // Get the list of genres for the dropdown
@@ -40,7 +41,7 @@ $context['genres'] = $genre->getGenres();
 // We're modifying data, include the accessor class
 if (isset($_REQUEST['action'])) {
 	require_once('albumQuery.php');
-	$album = new albumQuery($mysqli);
+	$albumQuery = new AlbumQuery($mysqli);
 
 	// $_REQUEST is the method agnostic version of $_GET or $_POST
 	switch($_REQUEST['action']) {
@@ -48,7 +49,7 @@ if (isset($_REQUEST['action'])) {
 		// Process the form submission
 	  case "addAlbum":
 
-			$error = $album->insertAlbum(
+			$error = $albumQuery->insertAlbum(
 									$_POST['artist_id'], $_POST['genre'],$_POST['name'],
 									$_POST['release_date'], $_POST['total_tracks']);
 
@@ -62,7 +63,7 @@ if (isset($_REQUEST['action'])) {
 
 		case "updateAlbum":
 
-			$error = $album->updateAlbum(
+			$error = $albumQuery->updateAlbum(
 				$_POST['album_id'],$_POST['artist_id'],$_POST['genre'],
 				$_POST['name'],$_POST['release_date'],$_POST['total_tracks']
 			);
@@ -72,13 +73,54 @@ if (isset($_REQUEST['action'])) {
 			} else {
 				$alert = "<div class='alert alert-danger' role='alert'>Album Update Failed</div>";
 			}
+			// Intentionally falls Through
+			// We're always just processing and then showing the updated edit form...
 
-			// Intentionally falls through
+		case "addTrack":
+
+			if ($_REQUEST['action'] == 'addTrack') {
+				require_once('trackQuery.php');
+				$trackQuery = new TrackQuery($mysqli);
+
+				$error = $trackQuery->addTrack($_REQUEST['album_id'],
+					$_REQUEST['track_genre_id'],$_REQUEST['track_name'],
+					$_REQUEST['track_rel_year'],$_REQUEST['track_num']);
+
+				if(!$error) {
+					$alert = "<div class='alert alert-success' role='alert'>Track Added Successfully</div>";
+				} else {
+					$alert = "<div class='alert alert-danger' role='alert'>Track Add Failed</div>";
+				}
+			}
+		// Intentionally Falls Through
+
+		case "updateTrack":
+
+			if ($_REQUEST['action'] == 'updateTrack') {
+
+				require_once('trackQuery.php');
+				$trackQuery = new TrackQuery($mysqli);
+
+				$error = $trackQuery->updateTrack($_REQUEST['track_id'],
+					$_REQUEST['track_genre_id'], $_REQUEST['track_name'],
+					$_REQUEST['track_rel_year'], $_REQUEST['track_num']);
+
+				if(!$error) {
+					$alert = "<div class='alert alert-success' role='alert'>Track Updated Successfully</div>";
+				} else {
+					$alert = "<div class='alert alert-danger' role='alert'>Track Update Failed</div>";
+				}
+			}
+			// Intentially falls through
 
 		case "editAlbum":
-			// Populate the form with existing data
 
-			$result = $album->getAlbum($_REQUEST['album_id']);
+			// Populate the form with existing data
+			$result = $albumQuery->getAlbum($_REQUEST['album_id']);
+
+			require_once('trackQuery.php');
+			$trackQuery = new TrackQuery($mysqli);
+			$track_result = $trackQuery->getTracks($_REQUEST['album_id']);
 
 			$context['album_id'] = $result[0]['album_id'];
 			$context['album_name'] = $result[0]['album_name'];
@@ -88,9 +130,8 @@ if (isset($_REQUEST['action'])) {
 			$context['release_date'] = $result[0]['release_date'];
 			$context['rel_year'] = $result[0]['rel_year'];
 			$context['total_tracks'] = $result[0]['total_tracks'];
-
+			$context['tracks'] = $track_result;
 		break;
-
 	}
 }
 

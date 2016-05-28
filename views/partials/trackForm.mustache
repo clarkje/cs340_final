@@ -1,0 +1,40 @@
+<fieldset>
+  <legend>Manage Tracks</legend>
+  {{#tracks}}
+  <form method="post" action="modAlbum.php" class="form-inline">
+    <input type="hidden" name="action" value="updateTrack">
+    <input type="hidden" name="album_id" value="{{album_id}}">
+    <input type="hidden" name="track_id" value="{{track_id}}">
+    <input type="submit" class="btn btn-primary btn-sm" value="Update">
+    <input id="track_name" class="form-inline" name="track_name" value="{{track_name}}">
+    <select class="form-inline" name="genre">
+      {{#genres}}
+        <option>{{description}}</option>
+      {{/genres}}
+    </select>
+    <input type="hidden" name="track_genre_id" value="{{^track_genre_id}}{{genre_id}}{{/track_genre_id}}{{track_genre_id}}">
+    <!-- We auto-populate with the album release year -->
+    <input id="track_year" class="form-inline" name="track_rel_year" value="{{^track_rel_year}}{{rel_year}}{{/track_rel_year}}{{track_rel_year}}" placeholder="release_year">
+    <input id="track_num" class="form-inline" name="track_num" value="{{track_num}}" placeholder="track_num"> / {{total_tracks}}
+  </form>
+  <!-- {{track_id}} - {{track_name}} - {{track_genre_description}} - {{track_rel_year}} - {{track_num}}/{{total_tracks}} -->
+  {{/tracks}}
+
+  <form method="post" action="modAlbum.php" class="form-inline">
+    <input type="hidden" name="action" value="addTrack">
+    <input type="hidden" name="album_id" value="{{album_id}}">
+
+    <input id="track_name" class="form-inline" name="track_name" placeholder="Track Name" value="{{track_name}}">
+    <select class="form-inline" name="genre">
+      {{#genres}}
+        <option>{{description}}</option>
+      {{/genres}}
+    </select>
+    <input type="hidden" name="track_genre_id" value="{{^track_genre_id}}{{genre_id}}{{/track_genre_id}}{{track_genre_id}}">
+    <!-- We auto-populate with the album release year -->
+    <input id="track_year" class="form-inline" name="track_rel_year" value="{{^track_rel_year}}{{rel_year}}{{/track_rel_year}}{{track_rel_year}}" placeholder="release_year">
+    <input id="track_num" class="form-inline" name="track_num" value="{{track_num}}" placeholder="track_num"> / {{total_tracks}}
+
+    <input type="submit" class="btn btn-primary btn-sm" value="Add Track">
+  </form>
+</fieldset>

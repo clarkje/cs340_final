@@ -31,9 +31,8 @@ $tpl = $mustache->loadTemplate('browseAlbum');
 
 // Include the albums class
 require_once('./albumQuery.php');
-$album = new albumQuery($mysqli);
+$albumQuery = new albumQuery($mysqli);
+$result = $albumQuery->getAlbum();
 
-$result = $album->getAlbum();
-
-echo $tpl->render(array('albums' => $result));
+echo $tpl->render(array('albums' => $result, 'tracks' => $track_result));
 ?>

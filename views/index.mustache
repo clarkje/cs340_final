@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,8 +8,15 @@
     <meta name="description" content="CS-340 Final Project - Music Lending Library">
     <meta name="author" content="Jeromie Clark, Andrew Kroes">
 
+    <link rel="stylesheet" href="js/jquery/jquery-ui.min.css">
+  	<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css">
+    <script src="js/jquery/jquery-1.12.3.min.js"></script>
+    <script src="js/jquery/jquery-ui.min.js"></script>
+  	<script src="js/bootstrap/js/bootstrap.min.js"></script>
+
+
     <!-- Uses Dashboard Template from Bootstrap.js -->
-    <title>Music Lending Library</title>
+    <title>{{$ title}Music Lending Library{{/ title}}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -24,10 +30,15 @@
       iframe {
         width: 100%;
         height: 100%;
-        border: 0; 
+        border: 0;
       }
-
     </style>
+    {{$ stylesheets}}
+    <!-- CSS from dependent templates -->
+    {{/ stylesheets}}
+    {{$ javascript}}
+    <!-- JS from dependent templates -->
+    {{/ javascript}}
   </head>
 
   <body>
@@ -69,34 +80,20 @@
             <li><a href="#">Export</a></li>
           </ul>
           <ul class="nav nav-sidebar">
-            <li><a href="">Nav item</a></li>
-            <li><a href="">Nav item again</a></li>
-            <li><a href="">One more nav</a></li>
-            <li><a href="">Another nav item</a></li>
-            <li><a href="">More navigation</a></li>
+            <li><a href="browseAlbum.php">Browse Albums</a></li>
           </ul>
           <ul class="nav nav-sidebar">
-            <li><a href="">Nav item again</a></li>
-            <li><a href="">One more nav</a></li>
-            <li><a href="">Another nav item</a></li>
+            <li><a href="modAlbum.php">Manage Albums</a></li>
+            <li><a href="modArtist.php">Manage Artists</a></li>
+            <li><a href="modComposer.php">Manage Composers</a></li>
+            <li><a href="runNightly.php">Run Nightly Report</a></li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <iframe src="addAlbum.php"></iframe>
+
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="../../dist/js/bootstrap.min.js"></script>
-    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
-    <script src="../../assets/js/vendor/holder.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
   </body>
 </html>

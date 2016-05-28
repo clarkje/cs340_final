@@ -1,6 +1,6 @@
 <?php
 
-class albumQuery {
+class AlbumQuery {
 
   private $mysqli = null;
 
@@ -30,8 +30,8 @@ class albumQuery {
     $stmt->bind_param("iissii", $album_id, $artist_id, $genre_id, $album_name,
               $release_date, $total_tracks);
 
-    if (isset($mysqli->error)) {
-      return $mysqli->error;
+    if (isset($this->mysqli->error)) {
+      return $this->mysqli->error;
     } else {
       return null;
     }
