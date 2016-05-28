@@ -100,11 +100,12 @@ CREATE TABLE ustatus (
 );
 
 -- User's acutal status and outstanding fine amount, if any
--- TODO: Foreign Keys
 CREATE TABLE user_ustatus (
   user_id INT(16) NOT NULL,
   ustatus_id INT(2) NOT NULL,
-  fine DECIMAL(5,2)
+  fine DECIMAL(5,2),
+  FOREIGN KEY (user_id) REFERENCES user (user_id),
+  FOREIGN KEY (ustatus_id) REFERENCES ustatus (ustatus_id)
 );
 
 -- Library Users
@@ -115,7 +116,8 @@ CREATE TABLE user (
   ustatus_id INT(2) NOT NULL,
   first_name VARCHAR(128) NOT NULL,
   last_name VARCHAR(128) NOT NULL,
-  email VARCHAR(255) NOT NULL
+  email VARCHAR(255) NOT NULL,
+  FOREIGN KEY (utype_id) REFERENCES utype (utype_id)
 );
 
 
@@ -126,5 +128,6 @@ CREATE TABLE ainstance_user (
   checked_out DATE,
   due_by DATE,
   returned DATE,
-  FOREIGN KEY (user_id) REFERENCES user (user_id)
+  FOREIGN KEY (user_id) REFERENCES user (user_id),
+  FOREIGN KEY (ainstance_id) REFERENCES ainstance (ainstance_id)
 );
