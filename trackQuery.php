@@ -295,13 +295,8 @@ class TrackQuery {
       return null;
     }
   }
-  
-  function deleteComposer($track_id, $composer_id) {
 
-    // track_id and composer_id must be valid indices
-    if($track_id <= 0 || $composer_id <=0) {
-      return "Error: track_id and composer_id must be valid values";
-    }
+  function deleteComposer($track_id, $composer_id) {
 
     $query = "DELETE FROM track_composer
               WHERE track_id = ? AND composer_id = ?";
@@ -311,6 +306,27 @@ class TrackQuery {
     }
 
     $stmt->bind_param("ii",$track_id, $composer_id);
+    $stmt->execute();
+
+    $stmt->close();
+
+    if ($this->mysqli->error) {
+      return $this->mysqli->error;
+    } else {
+      return null;
+    }
+  }
+
+  function deleteTrack($track_id) {
+
+    $query = "DELETE FROM track
+              WHERE track_id = ?";
+
+    if(!($stmt = $this->mysqli->prepare($query))){
+      echo "Prepare failed: "  . $this->mysqli->errno . " " . $this->mysqli->error;
+    }
+
+    $stmt->bind_param("i",$track_id);
     $stmt->execute();
 
     $stmt->close();

@@ -7,13 +7,13 @@
     </thead>
     {{^copies}}
       <tr>
-        <td colspan="4">No Records Found</td>
+        <td colspan="3">No Records Found</td>
       </tr>
     {{/copies}}
     {{#copies}}
     <tbody class="table-hover">
       <tr>
-        <td><a href="modCopy.php?action=editCopy&track_id={{track_id}}&album_id={{album_id}}" class="btn btn-default">Edit</a></td>
+        <td><a href="modCopy.php?action=editCopy&ainstance_id={{ainstance_id}}&album_id={{album_id}}" class="btn btn-default">Edit</a></td>
         <td>{{ainstance_location}}</td>
         <td>{{astatus_description}}</td>
         </tr>

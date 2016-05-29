@@ -64,7 +64,6 @@ if (isset($_REQUEST['action'])) {
 			}
 
 	  break;
-
 		case "updateAlbum":
 
 			$error = $albumQuery->updateAlbum(
@@ -77,107 +76,90 @@ if (isset($_REQUEST['action'])) {
 			} else {
 				$alert = "<div class='alert alert-danger' role='alert'>Album Update Failed</div>";
 			}
-			// Intentionally falls Through
-			// We're always just processing and then showing the updated edit form...
-
+		break;
 		case "addTrack":
 
-			// Guarding against fall-through execution
-			if ($_REQUEST['action'] == 'addTrack') {
-				require_once('TrackQuery.php');
-				$trackQuery = new TrackQuery($mysqli);
+			require_once('TrackQuery.php');
+			$trackQuery = new TrackQuery($mysqli);
 
-				$error = $trackQuery->addTrack($_REQUEST['album_id'],
-					$_REQUEST['track_genre_id'],$_REQUEST['track_name'],
-					$_REQUEST['track_rel_year'],$_REQUEST['track_num']);
+			$error = $trackQuery->addTrack($_REQUEST['album_id'],
+				$_REQUEST['track_genre_id'],$_REQUEST['track_name'],
+				$_REQUEST['track_rel_year'],$_REQUEST['track_num']);
 
-				if(!$error) {
-					$alert = "<div class='alert alert-success' role='alert'>Track Added Successfully</div>";
-				} else {
-					$alert = "<div class='alert alert-danger' role='alert'>Track Add Failed</div>";
-				}
+			if(!$error) {
+				$alert = "<div class='alert alert-success' role='alert'>Track Added Successfully</div>";
+			} else {
+				$alert = "<div class='alert alert-danger' role='alert'>Track Add Failed</div>";
 			}
-		// Intentionally Falls Through
+		break;
 
 		case "updateTrack":
 
-			if ($_REQUEST['action'] == 'updateTrack') {
+			require_once('TrackQuery.php');
+			$trackQuery = new TrackQuery($mysqli);
 
-				require_once('TrackQuery.php');
-				$trackQuery = new TrackQuery($mysqli);
+			$error = $trackQuery->updateTrack($_REQUEST['track_id'],
+				$_REQUEST['track_genre_id'], $_REQUEST['track_name'],
+				$_REQUEST['track_rel_year'], $_REQUEST['track_num']);
 
-				$error = $trackQuery->updateTrack($_REQUEST['track_id'],
-					$_REQUEST['track_genre_id'], $_REQUEST['track_name'],
-					$_REQUEST['track_rel_year'], $_REQUEST['track_num']);
-
-				// The update includes a new artist ID
-				if(isset($_REQUEST['track_artist_id'])) {
-					$error = $trackQuery->addArtist($_REQUEST['track_id'],$_REQUEST['track_artist_id']);
-				}
-
-				// The update includes a new composer ID
-				if(isset($_REQUEST['track_composer_id'])) {
-					$error = $trackQuery->addComposer($_REQUEST['track_id'],$_REQUEST['track_composer_id']);
-				}
-
-				if(!$error) {
-					$alert = "<div class='alert alert-success' role='alert'>Track Updated Successfully</div>";
-				} else {
-					$alert = "<div class='alert alert-danger' role='alert'>Track Update Failed</div>";
-				}
+			// The update includes a new artist ID
+			if(isset($_REQUEST['track_artist_id'])) {
+				$error = $trackQuery->addArtist($_REQUEST['track_id'],$_REQUEST['track_artist_id']);
 			}
-			// Intentially falls through
+
+			// The update includes a new composer ID
+			if(isset($_REQUEST['track_composer_id'])) {
+				$error = $trackQuery->addComposer($_REQUEST['track_id'],$_REQUEST['track_composer_id']);
+			}
+
+			if(!$error) {
+				$alert = "<div class='alert alert-success' role='alert'>Track Updated Successfully</div>";
+			} else {
+				$alert = "<div class='alert alert-danger' role='alert'>Track Update Failed</div>";
+			}
+		break;
 
 		case "addCopy":
 
-			if ($_REQUEST['action'] == 'addCopy') {
+			$error = $albumQuery->addCopy($_REQUEST['album_id'],$_REQUEST['ainstance_status'],
+													 $_REQUEST['ainstance_location']);
 
-					$error = $albumQuery->addCopy($_REQUEST['album_id'],$_REQUEST['ainstance_status'],
-															 $_REQUEST['ainstance_location']);
-
-					if(!$error) {
-						$alert = "<div class='alert alert-success' role='alert'>Copy Added Successfully</div>";
-					} else {
-						$alert = "<div class='alert alert-danger' role='alert'>Add Copy Failed</div>";
-					}
+			if(!$error) {
+				$alert = "<div class='alert alert-success' role='alert'>Copy Added Successfully</div>";
+			} else {
+				$alert = "<div class='alert alert-danger' role='alert'>Add Copy Failed</div>";
 			}
-			// Intentionally Falls Through
-
-			case "updateCopy":
-
-				if ($_REQUEST['action'] == 'updateCopy') {
-
-						$error = $albumQuery->updateCopy($_REQUEST['ainstance_id'],$_REQUEST['ainstance_status'],
-																 $_REQUEST['ainstance_location']);
-
-						if(!$error) {
-							$alert = "<div class='alert alert-success' role='alert'>Copy Updated Successfully</div>";
-						} else {
-							$alert = "<div class='alert alert-danger' role='alert'>Update Copy Failed</div>";
-						}
-				}
-				// Intentionally Falls Through
-
-		case "editAlbum":
-
-			// Populate the form with existing data
-			$result = $albumQuery->getAlbum($_REQUEST['album_id']);
-			$copy_result = $albumQuery->getCopies($_REQUEST['album_id']);
-
-			$context['album_id'] = $result[0]['album_id'];
-			$context['album_name'] = $result[0]['album_name'];
-			$context['artist_id'] = $result[0]['artist_id'];
-			$context['artist_name'] = $result[0]['artist_name'];
-			$context['genre_id'] = $result[0]['genre_id'];
-			$context['release_date'] = $result[0]['release_date'];
-			$context['rel_year'] = $result[0]['rel_year'];
-			$context['total_tracks'] = $result[0]['total_tracks'];
-			$context['tracks'] = $result[0]['tracks'];
-			$context['copies'] = $result[0]['copies'];
 
 		break;
+		case "deleteTrack":
+
+			require_once('TrackQuery.php');
+			$trackQuery = new TrackQuery($mysqli);
+
+			$error = $trackQuery->deleteTrack($_REQUEST['track_id']);
+
+			if(!$error) {
+				$alert = "<div class='alert alert-success' role='alert'>Track Deleted Successfully</div>";
+			} else {
+				$alert = "<div class='alert alert-danger' role='alert'>Track Delete Failed</div>";
+			}
 	}
 }
+
+// Populate the form with existing data
+$result = $albumQuery->getAlbum($_REQUEST['album_id']);
+$copy_result = $albumQuery->getCopies($_REQUEST['album_id']);
+
+$context['album_id'] = $result[0]['album_id'];
+$context['album_name'] = $result[0]['album_name'];
+$context['artist_id'] = $result[0]['artist_id'];
+$context['artist_name'] = $result[0]['artist_name'];
+$context['genre_id'] = $result[0]['genre_id'];
+$context['release_date'] = $result[0]['release_date'];
+$context['rel_year'] = $result[0]['rel_year'];
+$context['total_tracks'] = $result[0]['total_tracks'];
+$context['tracks'] = $result[0]['tracks'];
+$context['copies'] = $result[0]['copies'];
 
 // Populate the variables to pass to the template
 

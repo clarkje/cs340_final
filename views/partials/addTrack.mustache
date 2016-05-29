@@ -1,0 +1,65 @@
+<fieldset>
+  <legend>Add Track</legend>
+  <form method="post" action="modAlbum.php" class="form-horizontal">
+    <input type="hidden" name="action" value="addTrack">
+    <input type="hidden" name="album_id" value="{{album_id}}">
+
+    <!-- Adapted from horizontal form example at http://getbootstrap.com/css/#forms -->
+    <div class="form-group">
+      <div class="col-sm-2">
+        <label class="control-label col-sm-2" for="album_name">Album Name</label>
+      </div>
+      <div class="col-sm-10 form-control-static" id="album_name">{{album_name}}</div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-2">
+        <label class="control-label" for="track_name">Track Name</label>
+      </div>
+      <div class="col-sm-10">
+        <input id="track_name" class="form-control" name="track_name" placeholder="Track Name" value="{{track_name}}">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-2">
+        <label class="control-label col-sm-2" for="genre">Genre</label>
+      </div>
+      <div class="col-sm-10">
+        <select class="form-control" name="genre">
+          {{#genres}}
+            <option value="{{value}}">{{description}}</option>
+          {{/genres}}
+        </select>
+        <input type="hidden" name="track_genre_id" value="{{^track_genre_id}}{{genre_id}}{{/track_genre_id}}{{track_genre_id}}">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-2">
+        <label class="control-label col-sm-2" for="track_year">Release Year</label>
+      </div>
+      <div class="col-sm-10">
+        <input id="track_year" class="form-control" name="track_rel_year" value="{{^track_rel_year}}{{rel_year}}{{/track_rel_year}}{{track_rel_year}}" placeholder="release_year">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-2">
+        <label class="control-label col-sm-2" for="track_num">Track Number</label>
+      </div>
+      <div class="col-sm-10">
+        <!-- We auto-populate with the album release year -->
+        <input id="track_num" class="form-control-xs" name="track_num" value="{{track_num}}" placeholder="track_num">
+       / {{total_tracks}}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-10 col-sm-offset-2">
+        <input type="submit" class="btn btn-primary btn-sm" value="Add Track">
+      </div>
+    </div>
+
+  </form>
+</fieldset>
