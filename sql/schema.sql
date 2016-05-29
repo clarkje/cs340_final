@@ -82,11 +82,13 @@ CREATE TABLE track_artist (
 
 
 -- TODO: BUG - You shouldn't be able to insert the same composer/track pair multiple times --
+-- Code Fixed, AK
 CREATE TABLE track_composer (
   track_id INT(32) NOT NULL,
   composer_id INT(16) NOT NULL,
   FOREIGN KEY (track_id) REFERENCES track (track_id),
-  FOREIGN KEY (composer_id) REFERENCES composer (composer_id)
+  FOREIGN KEY (composer_id) REFERENCES composer (composer_id),
+  CONSTRAINT unique_track_composer UNIQUE (track_id, composer_id)
 );
 
 -- utype is the type of user: Admin / Patron (Undergrad v. Graduate?) / Clerk / etc.
