@@ -7,19 +7,19 @@
       <td>Year</td>
       <td>Track</td>
     </thead>
-{{^tracks}}
-<tr>
-  <td colspan="4">No Records Found</td>
-</tr>
-{{/tracks}}
-{{#tracks}}
-<tr>
-  <td>{{track_name}}</td>
-  <td>{{track_genre_description}}</td>
-  <td>{{#track_artists}}{{artist_name}}<br>{{/track_artists}}</td>
-  <td></td>
-  <td>{{track_rel_year}}</td>
-  <td>{{track_num}}/{{total_tracks}}</td>
-</tr>
-{{/tracks}}
+    {{^tracks}}
+    <tr>
+      <td colspan="4">No Records Found</td>
+    </tr>
+    {{/tracks}}
+    {{#tracks}}
+    <tr>
+      <td>{{track_name}}</td>
+      <td>{{track_genre_description}}</td>
+      <td>{{#track_artists}}{{artist_name}}<br>{{/track_artists}}</td>
+      <td>{{#composers}}{{composer_first_name}} {{composer_last_name}}<br>{{/composers}}</td>
+      <td>{{track_rel_year}}</td>
+      <td>{{track_num}}/{{total_tracks}}</td>
+    </tr>
+    {{/tracks}}
 </table>

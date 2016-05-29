@@ -1,75 +1,26 @@
+{{> above}}
 
-<!DOCTYPE html>
-<head>
-  <meta author="Jeromie Clark, Andrew Kroes">
-  <title>Add Albums and Tracks</title>
-  <link rel="stylesheet" href="js/jquery/jquery-ui.min.css">
-	<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css">
-  <script src="js/jquery/jquery-1.12.3.min.js"></script>
-  <script src="js/jquery/jquery-ui.min.js"></script>
-	<script src="js/bootstrap/js/bootstrap.min.js"></script>
-
-  <script>
-  $(function() {
-
-      $("#artist").autocomplete({
-        source: "artistSearch.php",
-        minLength: 2,
-        select: function( event, ui ) {
-					// Use preventDefault to prevent the value from showing in the textfield
-					// http://stackoverflow.com/questions/7642855/autocomplete-applying-value-not-label-to-textbox
-					event.preventDefault();
-      		$("#artist").val(ui.item.label);
-					$("#artist_id").val(ui.item.value);
-        },
-				focus: function(event, ui) {
-					event.preventDefault();
-					$("#artist").val(ui.item.label);
-				}
-
-      });
-
-			$("#composer").autocomplete({
-        source: "composerSearch.php",
-        minLength: 2,
-        select: function( event, ui ) {
-          $("#composer").val(ui.item.label);
-					$("#composer_id").val(ui.item.value);
-					return false;
-        },
-				focus: function(event, ui) {
-					event.preventDefault();
-					$("#composer").val(ui.item.label);
-				}
-      });
-    });
-  </script>
-</head>
-
-<body>
+  <h1>Browse Albums</h1>
   {{#albums}}
     <!-- TODO: Collapsable Panels -->
     <!-- http://getbootstrap.com/javascript/#collapse -->
-		<div class="container">
         <div class="panel panel-default">
-        <div class="panel-heading">
-          <a href="modAlbum.php?action=editAlbum&album_id={{album_id}}">[Edit]</a>&nbsp;
-          {{artist_name}}: {{album_name}}  ({{genre_desc}}, {{rel_year}})
-        </div>
 
-        <div class="panel-body">
-        <b>Tracks:</b>
-        {{> tracks}}
-        </div>
+          <div class="panel-heading">
+            <a href="modAlbum.php?action=editAlbum&album_id={{album_id}}">[Edit]</a>&nbsp;
+            {{artist_name}}: {{album_name}}  ({{genre_desc}}, {{rel_year}})
+          </div>
 
-        <div class="panel-body">
-        <b>Copies:</b>
-        {{> copies}}
-        </div>
+          <div class="panel-body">
+          <b>Tracks:</b>
+          {{> tracks}}
+          </div>
 
-        <button type="button" class="btn btn-primary btn-xs" style="border-left: 1em">Add Copy</button>
-
+          <div class="panel-body">
+          <b>Copies:</b>
+          {{> copies}}
+          </div>
       </div>
-    </div>
+
     {{/albums}}
-</body>
+{{> below}}
