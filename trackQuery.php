@@ -86,6 +86,57 @@ class TrackQuery {
     }
   }
 
+  // Returns an array of tracks associated with
+  // the current album ID
+  function getTrack($track_id) {
+
+    $query = "SELECT track.track_id, track.genre_id, genre.description,
+                    track.name, track.release_date, track.track_num,
+                    album.total_tracks
+              FROM track
+              INNER JOIN genre ON track.genre_id = genre.genre_id
+              INNER JOIN album ON track.album_id = album.album_id
+              WHERE track.track_id = ?";
+
+    if(!($stmt = $this->mysqli->prepare($query))){
+      echo "Prepare failed: "  . $this->mysqli->errno . " " . $this->mysqli->error;
+    }
+
+    $stmt->bind_param("i", $track_id);
+
+    $stmt->execute();
+    $stmt->bind_result($track_id, $genre_id, $genre_description, $name, $release_date, $track_num, $total_tracks);
+    $stmt->store_result();
+
+    while($stmt->fetch()) {
+
+      // Format the date so that just the year is displayed
+      $dt = new DateTime($release_date);
+      $rel_year = date_format($dt, "Y");
+
+      $result = array(
+        'track_id' => $track_id,
+        'track_genre_id' => $genre_id,
+        'track_genre_description' => $genre_description,
+        'track_name' => $name,
+        'track_release_date' => $release_date,
+        'track_rel_year' => $rel_year,
+        'track_num' => $track_num,
+        'total_tracks' => $total_tracks,
+        'track_artists' => $this->getArtists($track_id),
+        'composers' => $this->getComposers($track_id)
+        );
+    }
+
+    $stmt->close();
+
+    if ($this->mysqli->error) {
+      return null;
+    } else {
+      return $result;
+    }
+  }
+
   function updateTrack($track_id, $genre_id, $track_name, $rel_year, $track_num) {
 
     $release_date = $rel_year."-01-01";
@@ -219,4 +270,55 @@ class TrackQuery {
     }
   }
 
+  function deleteArtist($track_id, $artist_id) {
+
+    // track_id and artist_id must be valid indices
+    if($track_id <= 0 || $artist_id <=0) {
+      return "Error: track_id and artist_id must be valid values";
+    }
+
+    $query = "DELETE FROM track_artist
+              WHERE track_id = ? AND artist_id = ?";
+
+    if(!($stmt = $this->mysqli->prepare($query))){
+      echo "Prepare failed: "  . $this->mysqli->errno . " " . $this->mysqli->error;
+    }
+
+    $stmt->bind_param("ii",$track_id, $artist_id);
+    $stmt->execute();
+
+    $stmt->close();
+
+    if ($this->mysqli->error) {
+      return $this->mysqli->error;
+    } else {
+      return null;
+    }
+  }
+  
+  function deleteComposer($track_id, $composer_id) {
+
+    // track_id and composer_id must be valid indices
+    if($track_id <= 0 || $composer_id <=0) {
+      return "Error: track_id and composer_id must be valid values";
+    }
+
+    $query = "DELETE FROM track_composer
+              WHERE track_id = ? AND composer_id = ?";
+
+    if(!($stmt = $this->mysqli->prepare($query))){
+      echo "Prepare failed: "  . $this->mysqli->errno . " " . $this->mysqli->error;
+    }
+
+    $stmt->bind_param("ii",$track_id, $composer_id);
+    $stmt->execute();
+
+    $stmt->close();
+
+    if ($this->mysqli->error) {
+      return $this->mysqli->error;
+    } else {
+      return null;
+    }
+  }
 }

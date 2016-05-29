@@ -1,0 +1,22 @@
+<h3>Copies</h3>
+<table class="table">
+  <thead>
+      <td>&nbsp;</td>
+      <td>Location</td>
+      <td>Status</td>
+    </thead>
+    {{^copies}}
+      <tr>
+        <td colspan="4">No Records Found</td>
+      </tr>
+    {{/copies}}
+    {{#copies}}
+    <tbody class="table-hover">
+      <tr>
+        <td><a href="modCopy.php?action=editCopy&track_id={{track_id}}&album_id={{album_id}}" class="btn btn-default">Edit</a></td>
+        <td>{{ainstance_location}}</td>
+        <td>{{astatus_description}}</td>
+        </tr>
+    </tbody>
+  {{/copies}}
+</table>

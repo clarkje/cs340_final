@@ -1,0 +1,20 @@
+<!-- TODO: Collapsable Panels -->
+<!-- http://getbootstrap.com/javascript/#collapse -->
+
+<div class="panel panel-default">
+
+  <div class="panel-heading">
+    <a href="modAlbum.php?action=editAlbum&album_id={{album_id}}" class="btn btn-default">Edit</a>&nbsp;
+    Album: {{artist_name}}: {{album_name}}  ({{rel_year}})
+  </div>
+
+  <div class="panel-body">
+  <b>Tracks:</b>
+  {{> trackList}}
+  </div>
+
+  <div class="panel-body">
+  <b>Copies:</b>
+  {{> copyList}}
+  </div>
+</div>

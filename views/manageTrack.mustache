@@ -1,5 +1,5 @@
 {{> above}}
-<!-- BEGIN manageAlbum.mustache -->
+<!-- BEGIN manageTrack.mustache -->
   <script>
   $(function() {
 
@@ -24,9 +24,6 @@
         source: "artistSearch.php",
         minLength: 2,
         select: function( event, ui ) {
-
-          // Use preventDefault to prevent the value from showing in the textfield
-          // http://stackoverflow.com/questions/7642855/autocomplete-applying-value-not-label-to-textbox
           event.preventDefault();
           $("#track_artist").val(ui.item.label);
           $("#track_artist_id").val(ui.item.value);
@@ -56,11 +53,9 @@
 
 <div class="container">
   {{{alert}}}
-  {{>albumForm}}
+  {{>trackForm}}
   <br><br>
-  {{>trackList}}
-  <br><br>
-  {{>copyList}}
+  {{>albumList}}
 </div>
-<!-- END manageAlbum.mustache -->
+<!-- END manageTrack.mustache -->
 {{> below}}

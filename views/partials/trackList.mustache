@@ -1,0 +1,31 @@
+<h3>Tracks</h3>
+
+<table class="table">
+  <thead>
+      <td>&nbsp;</td>
+      <td>Name</td>
+      <td>Genre</td>
+      <td>Artists</td>
+      <td>Composers</td>
+      <td>Year</td>
+      <td>Track</td>
+    </thead>
+    {{^tracks}}
+      <tr>
+        <td colspan="4">No Records Found</td>
+      </tr>
+    {{/tracks}}
+    {{#tracks}}
+    <tbody class="table-hover">
+      <tr>
+        <td><a href="modTrack.php?action=editTrack&track_id={{track_id}}&album_id={{album_id}}" class="btn btn-default">Edit</a></td>
+        <td>{{track_name}}</td>
+        <td>{{track_genre_description}}</td>
+        <td>{{#track_artists}}{{artist_name}}<br>{{/track_artists}}</td>
+        <td>{{#composers}}{{composer_first_name}} {{composer_last_name}}<br>{{/composers}}</td>
+        <td>{{track_rel_year}}</td>
+        <td>{{track_num}}/{{total_tracks}}</td>
+      </tr>
+    </tbody>
+  {{/tracks}}
+</table>

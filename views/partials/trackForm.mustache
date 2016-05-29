@@ -1,65 +1,90 @@
 <fieldset>
-  <legend>Manage Tracks</legend>
-  {{#tracks}}
-
-  <form method="post" action="modAlbum.php" class="form-inline">
+  <legend>Update Track</legend>
+  {{^track}}
+    Track {{track_id}} Not Found
+  {{/track}}
+  {{#track}}
+  <form method="post" action="modTrack.php" class="form-horizontal">
     <input type="hidden" name="action" value="updateTrack">
     <input type="hidden" name="album_id" value="{{album_id}}">
     <input type="hidden" name="track_id" value="{{track_id}}">
+
+    <!-- Adapted from horizontal form example at http://getbootstrap.com/css/#forms -->
     <div class="form-group">
-      <input id="track_num" class="form-control" name="track_num" value="{{track_num}}" placeholder="track_num"> / {{total_tracks}}
-      <input id="track_name" class="form-control" name="track_name" value="{{track_name}}">
-      <select class="form-control" name="genre">
-        {{#genres}}
-          <option>{{description}}</option>
-        {{/genres}}
-      </select>
-      <input type="hidden" name="track_genre_id" value="{{^track_genre_id}}{{genre_id}}{{/track_genre_id}}{{track_genre_id}}">
-      <!-- We auto-populate with the album release year -->
-      <input id="track_year" class="form-control" name="track_rel_year" value="{{^track_rel_year}}{{rel_year}}{{/track_rel_year}}{{track_rel_year}}" placeholder="release_year">
+      <label class="control-label col-sm-2" for="album_name">Album Name</label>
+      <div class="col-sm-10 form-control-static" id="album_name">{{album_name}}</div>
     </div>
-    <br>
+
     <div class="form-group">
-      <!--
-        Mustache trick for running only once in an array:
-        http://stackoverflow.com/questions/11653764/mustache-how-to-detect-array-is-not-empty
-        Boostrap Input Group Example:
-        http://getbootstrap.com/components/#input-groups
-      -->
-      <div class="input-group">
-        <span class="input-group-addon" id="track_artist_addon">{{#track_artists}}{{artist_name}}&nbsp;&nbsp;{{/track_artists}}</span>
-        <input name="track_artist" class="form-control" value="" aria-describedby="track_artist_addon" id="track_artist" placeholder="{{^track_artists}}{{artist_name}}{{/track_artists}}{{#track_artists.0}}Add Another Artist{{/track_artists.0}}" value="{{artist_name}}">
+      <label class="control-label col-sm-2" for="track_name">Track Name</label>
+      <div class="col-sm-10">
+        <input id="track_name" class="form-control" name="track_name" placeholder="Track Name" value="{{track_name}}">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="genre">Genre</label>
+      <div class="col-sm-10">
+        <select class="form-control" name="genre">
+          {{#genres}}
+            <option value="{{value}}">{{description}}</option>
+          {{/genres}}
+        </select>
+        <input type="hidden" name="track_genre_id" value="{{^track_genre_id}}{{genre_id}}{{/track_genre_id}}{{track_genre_id}}">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="track_year">Release Year</label>
+      <div class="col-sm-10">
+        <input id="track_year" class="form-control" name="track_rel_year" value="{{^track_rel_year}}{{rel_year}}{{/track_rel_year}}{{track_rel_year}}" placeholder="release_year">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="track_num">Track Number</label>
+      <div class="col-sm-10">
+        <!-- We auto-populate with the album release year -->
+        <input id="track_num" class="form-control-xs" name="track_num" value="{{track_num}}" placeholder="track_num">
+        <!-- / {{total_tracks}} -->
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="track_artist">Artists</label>
+      <div class="form col-sm-10">
+        {{#track_artists}}
+          <a href="modTrack.php?action=deleteArtist&track_id={{track_id}}&artist_id={{artist_id}}&album_id={{album_id}}" class="btn btn-danger btn-xs">
+             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          </a>
+          {{artist_name}}<br>
+        {{/track_artists}}
+        <input name="track_artist" class="form-control ui-autocomplete-input" value="" id="track_artist" placeholder="Add Artist" value="{{artist_name}}">
         <input type="hidden" name="track_artist_id" value="" id="track_artist_id">
       </div>
-      <br>
-      <div class="input-group">
-        <span class="input-group-addon" id="track_composer_addon">{{#composers}}{{composer_first_name}} {{composer_last_name}}&nbsp;{{/composers}}</span>
-        <input name="track_composer" class="form-control" value="" aria-describedby="track_composer_addon" id="track_composer" placeholder="Add Composer" value="{{track_composer}}">
+    </div>
+
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="track_artist">Composers</label>
+      <div class="form col-sm-10">
+        {{#composers}}
+          <a href="modTrack.php?action=deleteComposer&track_id={{track_id}}&composer_id={{composer_id}}&album_id={{album_id}}" class="btn btn-danger btn-xs">
+             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          </a>
+          {{composer_first_name}} {{composer_last_name}}<br>
+        {{/composers}}
+        <input name="track_composer" class="form-control ui-autocomplete-input" value="" id="track_composer" placeholder="Add Composer" value="{{composer_name}}">
         <input type="hidden" name="track_composer_id" value="" id="track_composer_id">
       </div>
-      <input type="submit" class="btn btn-primary btn-sm" value="Update">
     </div>
-    </form>
-    <br>
-    <hr></hr>
-  <!-- {{track_id}} - {{track_name}} - {{track_genre_description}} - {{track_rel_year}} - {{track_num}}/{{total_tracks}} -->
-  {{/tracks}}
 
-  <form method="post" action="modAlbum.php" class="form-inline">
-    <input type="hidden" name="action" value="addTrack">
-    <input type="hidden" name="album_id" value="{{album_id}}">
+    <div class="form-group">
+      <div class="col-sm-10 col-sm-offset-2">
+        <input type="submit" class="btn btn-primary btn-sm" value="Update Track">
+      </div>
+    </div>
 
-    <input id="track_name" class="form-inline" name="track_name" placeholder="Track Name" value="{{track_name}}">
-    <select class="form-inline" name="genre">
-      {{#genres}}
-        <option>{{description}}</option>
-      {{/genres}}
-    </select>
-    <input type="hidden" name="track_genre_id" value="{{^track_genre_id}}{{genre_id}}{{/track_genre_id}}{{track_genre_id}}">
-    <!-- We auto-populate with the album release year -->
-    <input id="track_year" class="form-inline" name="track_rel_year" value="{{^track_rel_year}}{{rel_year}}{{/track_rel_year}}{{track_rel_year}}" placeholder="release_year">
-    <input id="track_num" class="form-inline" name="track_num" value="{{track_num}}" placeholder="track_num"> / {{total_tracks}}
-
-    <input type="submit" class="btn btn-primary btn-sm" value="Add Track">
   </form>
+  {{/track}}
 </fieldset>
