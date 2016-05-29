@@ -175,7 +175,6 @@ if (isset($_REQUEST['action'])) {
 			$context['tracks'] = $result[0]['tracks'];
 			$context['copies'] = $result[0]['copies'];
 
-			var_dump($result[0]['tracks']);
 		break;
 	}
 }
