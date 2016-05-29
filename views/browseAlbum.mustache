@@ -48,27 +48,24 @@
 
 <body>
   {{#albums}}
+    <!-- TODO: Collapsable Panels -->
+    <!-- http://getbootstrap.com/javascript/#collapse -->
 		<div class="container">
         <div class="panel panel-default">
         <div class="panel-heading">
           <a href="modAlbum.php?action=editAlbum&album_id={{album_id}}">[Edit]</a>&nbsp;
           {{artist_name}}: {{album_name}}  ({{genre_desc}}, {{rel_year}})
         </div>
+
         <div class="panel-body">
-          {{#tracks}}
-          <ol>
-              <li>{{track_num}}/{{total_tracks}} - {{track_name}} - {{artist}} - {{composer}} - {{duration}}</li>
-          </ol>
-          {{/tracks}}
+        <b>Tracks:</b>
+        {{> tracks}}
         </div>
 
+        <div class="panel-body">
         <b>Copies:</b>
-        <ol>
-            <li>
-              <button type="button" class="btn btn-primary btn-xs" style="border-left: 1em">Edit</button>
-              A1235789 - 5th Floor Library - Reference Only
-            </li>
-        </ol>
+        {{> copies}}
+        </div>
 
         <button type="button" class="btn btn-primary btn-xs" style="border-left: 1em">Add Copy</button>
 

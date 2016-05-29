@@ -1,6 +1,6 @@
 <?php
 
-class genreQuery {
+class GenreQuery {
 
   private $mysqli;
 

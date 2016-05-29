@@ -34,13 +34,17 @@ $tpl = $mustache->loadTemplate('manageAlbum');
 $context = array();
 
 // Get the list of genres for the dropdown
-require_once('genreQuery.php');
-$genre = new genreQuery($mysqli);
+require_once('GenreQuery.php');
+$genre = new GenreQuery($mysqli);
 $context['genres'] = $genre->getGenres();
+
+require_once('AlbumStatusQuery.php');
+$astatus = new AlbumStatusQuery($mysqli);
+$context['astatus'] = $astatus->getStatus();
 
 // We're modifying data, include the accessor class
 if (isset($_REQUEST['action'])) {
-	require_once('albumQuery.php');
+	require_once('AlbumQuery.php');
 	$albumQuery = new AlbumQuery($mysqli);
 
 	// $_REQUEST is the method agnostic version of $_GET or $_POST
@@ -78,8 +82,9 @@ if (isset($_REQUEST['action'])) {
 
 		case "addTrack":
 
+			// Guarding against fall-through execution
 			if ($_REQUEST['action'] == 'addTrack') {
-				require_once('trackQuery.php');
+				require_once('TrackQuery.php');
 				$trackQuery = new TrackQuery($mysqli);
 
 				$error = $trackQuery->addTrack($_REQUEST['album_id'],
@@ -98,12 +103,22 @@ if (isset($_REQUEST['action'])) {
 
 			if ($_REQUEST['action'] == 'updateTrack') {
 
-				require_once('trackQuery.php');
+				require_once('TrackQuery.php');
 				$trackQuery = new TrackQuery($mysqli);
 
 				$error = $trackQuery->updateTrack($_REQUEST['track_id'],
 					$_REQUEST['track_genre_id'], $_REQUEST['track_name'],
 					$_REQUEST['track_rel_year'], $_REQUEST['track_num']);
+
+				// The update includes a new artist ID
+				if(isset($_REQUEST['track_artist_id'])) {
+					$error = $trackQuery->addArtist($_REQUEST['track_id'],$_REQUEST['track_artist_id']);
+				}
+
+				// The update includes a new composer ID
+				if(isset($_REQUEST['track_composer_id'])) {
+					$error = $trackQuery->addComposer($_REQUEST['track_id'],$_REQUEST['track_composer_id']);
+				}
 
 				if(!$error) {
 					$alert = "<div class='alert alert-success' role='alert'>Track Updated Successfully</div>";
@@ -113,14 +128,41 @@ if (isset($_REQUEST['action'])) {
 			}
 			// Intentially falls through
 
+		case "addCopy":
+
+			if ($_REQUEST['action'] == 'addCopy') {
+
+					$error = $albumQuery->addCopy($_REQUEST['album_id'],$_REQUEST['ainstance_status'],
+															 $_REQUEST['ainstance_location']);
+
+					if(!$error) {
+						$alert = "<div class='alert alert-success' role='alert'>Copy Added Successfully</div>";
+					} else {
+						$alert = "<div class='alert alert-danger' role='alert'>Add Copy Failed</div>";
+					}
+			}
+			// Intentionally Falls Through
+
+			case "updateCopy":
+
+				if ($_REQUEST['action'] == 'updateCopy') {
+
+						$error = $albumQuery->updateCopy($_REQUEST['ainstance_id'],$_REQUEST['ainstance_status'],
+																 $_REQUEST['ainstance_location']);
+
+						if(!$error) {
+							$alert = "<div class='alert alert-success' role='alert'>Copy Updated Successfully</div>";
+						} else {
+							$alert = "<div class='alert alert-danger' role='alert'>Update Copy Failed</div>";
+						}
+				}
+				// Intentionally Falls Through
+
 		case "editAlbum":
 
 			// Populate the form with existing data
 			$result = $albumQuery->getAlbum($_REQUEST['album_id']);
-
-			require_once('trackQuery.php');
-			$trackQuery = new TrackQuery($mysqli);
-			$track_result = $trackQuery->getTracks($_REQUEST['album_id']);
+			$copy_result = $albumQuery->getCopies($_REQUEST['album_id']);
 
 			$context['album_id'] = $result[0]['album_id'];
 			$context['album_name'] = $result[0]['album_name'];
@@ -130,7 +172,10 @@ if (isset($_REQUEST['action'])) {
 			$context['release_date'] = $result[0]['release_date'];
 			$context['rel_year'] = $result[0]['rel_year'];
 			$context['total_tracks'] = $result[0]['total_tracks'];
-			$context['tracks'] = $track_result;
+			$context['tracks'] = $result[0]['tracks'];
+			$context['copies'] = $result[0]['copies'];
+
+			var_dump($result[0]['tracks']);
 		break;
 	}
 }

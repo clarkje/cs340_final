@@ -18,20 +18,38 @@
 					event.preventDefault();
 					$("#artist").val(ui.item.label);
 				}
-
       });
 
-			$("#composer").autocomplete({
+      $("#track_artist").autocomplete({
+        source: "artistSearch.php",
+        minLength: 2,
+        select: function( event, ui ) {
+
+          // Use preventDefault to prevent the value from showing in the textfield
+          // http://stackoverflow.com/questions/7642855/autocomplete-applying-value-not-label-to-textbox
+          event.preventDefault();
+          $("#track_artist").val(ui.item.label);
+          $("#track_artist_id").val(ui.item.value);
+        },
+        focus: function(event, ui) {
+          event.preventDefault();
+          $("#track_artist").val(ui.item.label);
+        }
+      });
+
+
+
+			$("#track_composer").autocomplete({
         source: "composerSearch.php",
         minLength: 2,
         select: function( event, ui ) {
-          $("#composer").val(ui.item.label);
-					$("#composer_id").val(ui.item.value);
+          $("#track_composer").val(ui.item.label);
+					$("#track_composer_id").val(ui.item.value);
 					return false;
         },
 				focus: function(event, ui) {
 					event.preventDefault();
-					$("#composer").val(ui.item.label);
+					$("#track_composer").val(ui.item.label);
 				}
       });
     });
@@ -40,8 +58,11 @@
 
 <div class="container">
   {{{alert}}}
-  {{>addAlbum}}
+  {{>albumForm}}
+  <br><br>
   {{>trackForm}}
+  <br><br>
+  {{>copyForm}}
 </div>
 <!-- END manageAlbum.mustache -->
 {{> below}}

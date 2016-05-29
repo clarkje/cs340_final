@@ -1,8 +1,11 @@
 <?php
 // ini_set('display_errors', 'On');
 
-//Connects to the database
-$mysqli = new mysqli("oniddb.cws.oregonstate.edu","clarkje-db","9mbj026jOGfRusf4","clarkje-db");
+// Setup the MySQL Connection
+require_once('config/mysql.php');
+
+$mysqli = new mysqli($db_host,$db_user,$db_pass,$db_schema);
+
 if($mysqli->connect_errno){
 	echo "Connection error " . $mysqli->connect_errno . " " . $mysqli->connect_error;
 }

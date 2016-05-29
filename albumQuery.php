@@ -1,4 +1,5 @@
 <?php
+require_once('TrackQuery.php');
 
 class AlbumQuery {
 
@@ -113,7 +114,9 @@ class AlbumQuery {
           "total_tracks" => $total_tracks
       );
 
-      $result[$i]["tracks"] = $this->getTracks($album_id);
+      $trackQuery = new TrackQuery($this->mysqli);
+      $result[$i]["tracks"] = $trackQuery->getTracks($album_id);
+      $result[$i]['copies'] = $this->getCopies($album_id);
       $i++;
     }
 
@@ -128,45 +131,84 @@ class AlbumQuery {
     return $result;
   }
 
-  // Returns an array of tracks for an album_id
-  function getTracks($album_id) {
+  // Creates a new ainstance record for a supplied album ID
+  function addCopy($album_id, $astatus_id, $location) {
 
-    // Get the tracks for the album
-    $track_query = "SELECT track.track_id, track.name, track.genre_id,
-                           track.release_date, track.track_num,
-                           artist.name, composer.first_name, composer.last_name
-                    FROM track
-                    INNER JOIN track_artist ON track_artist.track_id = track.track_id
-                    INNER JOIN artist ON track_artist.artist_id = artist.artist_id
-                    INNER JOIN track_composer ON track_composer.track_id = track.track_id
-                    INNER JOIN composer ON track_composer.composer_id = composer.composer_id
-                    WHERE album_id = ?";
+    $query = "INSERT INTO ainstance
+              (album_id, astatus_id, location)
+              VALUES
+              (?,?,?)";
 
-    if(!($track_stmt = $this->mysqli->prepare($track_query))){
+    if(!($stmt = $this->mysqli->prepare($query))){
       echo "Prepare failed: "  . $this->mysqli->errno . " " . $this->mysqli->error;
     }
-    $track_stmt->bind_param("i", $album_id);
-    $track_stmt->execute();
-    $track_stmt->bind_result($track_id, $track_name, $genre_id, $release_date,
-    $track_num, $artist_name, $composer_first_name, $composer_last_name);
-    $track_stmt->store_result();
 
-    $tracks = array();
-    while($track_stmt->fetch()) {
-      $tracks[] = array(
-          "track_id" => $track_id,
-          "track_name" => $track_name,
-          "genre_id" => $genre_id,
-          "release_date" => $release_date,
-          "track_num" => $track_num,
-          "artist_name" => $artist_name,
-          "composer_first_name" => $composer_first_name,
-          "composer_last_name" => $composer_last_name
-      );
+    $stmt->bind_param("iis", $album_id, $astatus_id, $location);
+    $stmt->execute();
+
+    if($this->mysqli->error) {
+      return $this->mysqli->error;
+    } else {
+      return null;
     }
-    $track_stmt->close();
-    return $tracks;
   }
 
+  // Updates the supplied ainstance record
+  function updateCopy($ainstance_id, $astatus_id, $location) {
+    $query = "UPDATE ainstance SET
+                astatus_id = ?,
+                location = ?
+              WHERE ainstance_id = ?";
+
+    if(!($stmt = $this->mysqli->prepare($query))){
+      echo "Prepare failed: "  . $this->mysqli->errno . " " . $this->mysqli->error;
+    }
+
+    $stmt->bind_param("isi", $astatus_id, $location, $ainstance_id);
+    $stmt->execute();
+
+    var_dump($this->mysqli->error);
+
+    if($this->mysqli->error) {
+      return $this->mysqli->error;
+    } else {
+      return null;
+    }
+  }
+
+  // Returns a list of all album instances for a given album ID
+  function getCopies($album_id) {
+
+    $query = "SELECT ainstance.ainstance_id, ainstance.astatus_id,
+                     astatus.description, ainstance.location
+              FROM ainstance
+              INNER JOIN astatus ON ainstance.astatus_id = astatus.astatus_id
+              WHERE ainstance.album_id = ?";
+
+    if(!($stmt = $this->mysqli->prepare($query))){
+      echo "Prepare failed: "  . $this->mysqli->errno . " " . $this->mysqli->error;
+    }
+
+    $stmt->bind_param("i", $album_id);
+    $stmt->execute();
+    $stmt->bind_result($ainstance_id, $astatus_id, $astatus_description,
+                       $ainstance_location);
+
+    $result = array();
+    while($stmt->fetch()) {
+      $result[] = array(
+        'ainstance_id' => $ainstance_id,
+        'astatus_id' => $astatus_id,
+        'astatus_description' => $astatus_description,
+        'ainstance_location' => $ainstance_location
+      );
+    }
+
+    if($this->mysqli->error) {
+      return null;
+    } else {
+      return $result;
+    }
+  }
 }
 ?>

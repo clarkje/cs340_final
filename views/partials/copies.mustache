@@ -1,0 +1,19 @@
+<table class="table">
+  <thead>
+    <td>Copy ID</td>
+    <td>Location</td>
+    <td>Status<td>
+  </thead>
+{{^copies}}
+  <tr>
+    <td colspan=3>No Records Found</td>
+  </tr>
+{{/copies}}
+{{#copies}}
+  <tr>
+    <td>{{ainstance_id}}</td>
+    <td>{{ainstance_location}}</td>
+    <td>{{astatus_description}}</td>
+  </tr>
+{{/copies}}
+</table>

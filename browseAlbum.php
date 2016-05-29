@@ -33,6 +33,6 @@ $tpl = $mustache->loadTemplate('browseAlbum');
 require_once('./albumQuery.php');
 $albumQuery = new albumQuery($mysqli);
 $result = $albumQuery->getAlbum();
-
-echo $tpl->render(array('albums' => $result, 'tracks' => $track_result));
+3
+echo $tpl->render(array('albums' => $result));
 ?>

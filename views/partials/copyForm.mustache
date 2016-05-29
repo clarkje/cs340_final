@@ -1,0 +1,29 @@
+<fieldset>
+  <legend>Manage Copies</legend>
+  {{#copies}}
+  <form method="post" action="modAlbum.php" class="form-inline">
+    <input type="hidden" name="action" value="updateCopy">
+    <input type="hidden" name="ainstance_id" value="{{ainstance_id}}">
+    <input type="hidden" name="album_id" value="{{album_id}}">
+    <input type="submit" class="btn btn-primary btn-sm" value="Update">
+    <input id="ainstance_location" class="form-inline" name="ainstance_location" value="{{ainstance_location}}" placeholder="Copy Location">
+    <select class="form-inline" name="ainstance_status">
+      {{#astatus}}
+        <option value="{{astatus_id}}">{{description}}</option>
+      {{/astatus}}
+    </select>
+  </form>
+  {{/copies}}
+
+  <form method="post" action="modAlbum.php" class="form-inline">
+    <input type="hidden" name="action" value="addCopy">
+    <input type="hidden" name="album_id" value="{{album_id}}">
+    <input id="ainstance_location " class="form-inline" name="ainstance_location" value="{{ainstance_location}}" placeholder="Copy Location">
+    <select class="form-inline" name="ainstance_status">
+      {{#astatus}}
+        <option value="{{astatus_id}}">{{description}}</option>
+      {{/astatus}}
+    </select>
+    <input type="submit" class="btn btn-primary btn-sm" value="Add Copy">
+  </form>
+</fieldset>
