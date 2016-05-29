@@ -80,6 +80,8 @@ CREATE TABLE track_artist (
   FOREIGN KEY (artist_id) REFERENCES artist (artist_id)
 );
 
+
+-- TODO: BUG - You shouldn't be able to insert the same composer/track pair multiple times --
 CREATE TABLE track_composer (
   track_id INT(32) NOT NULL,
   composer_id INT(16) NOT NULL,
