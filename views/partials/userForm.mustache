@@ -41,7 +41,7 @@
         <!-- TODO: JavaScript function that selects the chosen option element when editing -->
         <select class="form-control" name="utype">
           {{#utypes}}
-            <option value={{utype_id}}>{{utype_description}}</option>
+            <option value="{{utype_id}}" {{#selected}}selected{{/selected}}>{{utype_description}}</option>
           {{/utypes}}
         </select>
       </div>
@@ -55,7 +55,7 @@
         <!-- TODO: JavaScript function that selects the chosen option element when editing -->
         <select class="form-control" name="ustatus">
           {{#ustatuses}}
-            <option value={{ustatus_id}}>{{ustatus_description}}</option>
+            <option value="{{ustatus_id}}" {{#selected}}selected{{/selected}}>{{ustatus_description}}</option>
           {{/ustatuses}}
         </select>
       </div>

@@ -28,10 +28,9 @@
       <div class="col-sm-10">
         <select class="form-control" name="genre">
           {{#genres}}
-            <option value="{{value}}">{{description}}</option>
+            <option value="{{genre_id}}" {{#selected}}selected{{/selected}}>{{description}}</option>
           {{/genres}}
         </select>
-        <input type="hidden" name="track_genre_id" value="{{^track_genre_id}}{{genre_id}}{{/track_genre_id}}{{track_genre_id}}">
       </div>
     </div>
 

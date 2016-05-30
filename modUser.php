@@ -77,7 +77,7 @@ if (isset($_REQUEST['action'])) {
 		} else {
 			$alert = "<div class='alert alert-danger' role='alert'>Track Update Failed</div>";
 		}
-
+		break;
 		case "deleteUser":
 
 		$error = $userQuery->deleteUser($_REQUEST['user_id']);
@@ -87,8 +87,6 @@ if (isset($_REQUEST['action'])) {
 		} else {
 			$alert = "<div class='alert alert-danger' role='alert'>User Deleted Failed</div>";
 		}
-
-
 	}
 }
 
@@ -142,6 +140,26 @@ $context['users'] = $userQuery->getUsers($_REQUEST['offset'],$ITEMS_PER_PAGE);
 // Populate the variables to pass to the template
 if (isset($alert)) {
 	$context['alert'] = $alert;
+}
+
+// Since the template engine is brain-dead, we need to tell it which element to
+// mark as selected in advance.
+if(isset($context['user']['ustatus_id']) && isset($context['ustatuses'])) {
+	for ($i = 0; $i < count($context['ustatuses']); $i++) {
+		if($context['ustatuses'][$i]['ustatus_id'] == $context['user']['ustatus_id']) {
+				$context['ustatuses'][$i]['selected'] = true;
+		}
+	}
+}
+
+// Since the template engine is brain-dead, we need to tell it which element to
+// mark as selected in advance.
+if(isset($context['user']['utype_id']) && isset($context['utypes'])) {
+	for ($i = 0; $i < count($context['utypes']); $i++) {
+		if($context['utypes'][$i]['utype_id'] == $context['user']['utype_id']) {
+				$context['utypes'][$i]['selected'] = true;
+		}
+	}
 }
 
 echo $tpl->render($context);

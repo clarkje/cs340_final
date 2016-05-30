@@ -33,7 +33,7 @@
         <!-- TODO: JavaScript function that selects the chosen option element when editing -->
         <select class="form-control" name="genre">
           {{#genres}}
-            <option value="{{genre_id}}">{{description}}</option>
+            <option value="{{genre_id}}" {{#selected}}selected{{/selected}}>{{description}}</option>
           {{/genres}}
         </select>
     </div>

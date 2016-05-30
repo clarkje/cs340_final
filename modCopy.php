@@ -56,40 +56,25 @@ $trackQuery = new TrackQuery($mysqli);
 if (isset($_REQUEST['action'])) {
 
 	switch($_REQUEST['action']) {
-		// Intentionally Falls Through
 		case "updateCopy":
-
-			if ($_REQUEST['action'] == 'updateCopy') {
-
-					$error = $albumQuery->updateCopy($_REQUEST['ainstance_id'],$_REQUEST['ainstance_status'],
-															 $_REQUEST['ainstance_location']);
-
-					if(!$error) {
-						$alert = "<div class='alert alert-success' role='alert'>Copy Updated Successfully</div>";
-					} else {
-						$alert = "<div class='alert alert-danger' role='alert'>Update Copy Failed</div>";
-					}
-			}
-			// Intentionally Falls Through
-		case "deleteCopy":
-
-				$error = $aiQuery->deleteAlbumInstance($_REQUEST['ainstance_id']);
-
-				if(!$error) {
-					$alert = "<div class='alert alert-success' role='alert'>Artist Deleted Successfully</div>";
-				} else {
-					$alert = "<div class='alert alert-danger' role='alert'>Artist Delete Failed</div>";
-				}
-		break;
-
-		case "addCopy":
-
- 			// $error = $trackQuery->deleteComposer($_REQUEST['track_id'],$_REQUEST['composer_id']);
+			$error = $albumQuery->updateCopy($_REQUEST['ainstance_id'],$_REQUEST['ainstance_status'],
+													 $_REQUEST['ainstance_location']);
 
 			if(!$error) {
-				$alert = "<div class='alert alert-success' role='alert'>Composer Deleted Successfully</div>";
+				$alert = "<div class='alert alert-success' role='alert'>Copy Updated Successfully</div>";
 			} else {
-				$alert = "<div class='alert alert-danger' role='alert'>Composer Delete Failed</div>";
+				$alert = "<div class='alert alert-danger' role='alert'>Update Copy Failed</div>";
+			}
+
+		break;
+		case "deleteCopy":
+
+			$error = $aiQuery->deleteAlbumInstance($_REQUEST['ainstance_id']);
+
+			if(!$error) {
+				$alert = "<div class='alert alert-success' role='alert'>Copy Deleted Successfully</div>";
+			} else {
+				$alert = "<div class='alert alert-danger' role='alert'>Copy Delete Failed</div>";
 			}
 		break;
 	}
@@ -98,8 +83,8 @@ if (isset($_REQUEST['action'])) {
 // Populate the form with existing data
 $result = $albumQuery->getAlbum($_REQUEST['album_id']);
 $copy_result = $albumQuery->getCopies($_REQUEST['album_id']);
-$context['ainstance'] = $aiQuery->getAlbumInstance($_REQUEST['ainstance_id']);
 
+$context['ainstance'] = $aiQuery->getAlbumInstance($_REQUEST['ainstance_id']);
 
 $context['album_id'] = $result[0]['album_id'];
 $context['album_name'] = $result[0]['album_name'];
@@ -111,6 +96,17 @@ $context['rel_year'] = $result[0]['rel_year'];
 $context['total_tracks'] = $result[0]['total_tracks'];
 $context['tracks'] = $result[0]['tracks'];
 $context['copies'] = $result[0]['copies'];
+
+
+// Since the template engine is brain-dead, we need to tell it which element to
+// mark as selected in advance.
+if(isset($context['ainstance']['astatus_id']) && isset($context['astatus'])) {
+	for ($i = 0; $i < count($context['astatus']); $i++) {
+		if($context['ainstance']['astatus_id'] == $context['astatus'][$i]['astatus_id']) {
+				$context['astatus'][$i]['selected'] = true;
+		}
+	}
+}
 
 // Populate the variables to pass to the template
 if (isset($alert)) {

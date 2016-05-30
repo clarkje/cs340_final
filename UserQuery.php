@@ -59,10 +59,11 @@ class UserQuery {
   function getUser($user_id) {
 
     $query = "SELECT user.user_id, user.utype_id, utype.description,
-                     user.ustatus_id, user.first_name,
+                     user.ustatus_id, ustatus.description, user.first_name,
                      user.last_name, user.email
               FROM user
               INNER JOIN utype ON user.utype_id = utype.utype_id
+              INNER JOIN ustatus ON user.ustatus_id = ustatus.ustatus_id
               WHERE user_id = ?";
 
     if(!($stmt = $this->mysqli->prepare($query))){
@@ -73,7 +74,7 @@ class UserQuery {
 
     $stmt->execute();
     $stmt->bind_result($user_id, $utype_id, $utype_description, $ustatus_id,
-                       $first_name, $last_name, $email);
+                       $ustatus_description, $first_name, $last_name, $email);
     $stmt->store_result();
 
     while($stmt->fetch()) {
@@ -81,7 +82,7 @@ class UserQuery {
                         'utype_id' => $utype_id,
                         'utype_description' => $utype_description,
                         'ustatus_id' => $ustatus_id,
-                        'ustatus_description' => 'broken',
+                        'ustatus_description' => $ustatus_description,
                         'first_name' => $first_name,
                         'last_name' => $last_name,
                         'email' => $email);
@@ -102,10 +103,11 @@ class UserQuery {
   function getUsers($offset = 0, $limit = 0, $order_by = "last_name") {
 
     $query = "SELECT user.user_id, user.utype_id, utype.description,
-                     user.ustatus_id, user.first_name,
+                     user.ustatus_id, ustatus.description, user.first_name,
                      user.last_name, user.email
               FROM user
               INNER JOIN utype ON user.utype_id = utype.utype_id
+              INNER JOIN ustatus ON user.ustatus_id = ustatus.ustatus_id
               ORDER BY ? ASC ";
 
     // Support windowing for pagination
@@ -124,7 +126,7 @@ class UserQuery {
     }
     $stmt->execute();
     $stmt->bind_result($user_id, $utype_id, $utype_description, $ustatus_id,
-                       $first_name, $last_name, $email);
+                       $ustatus_description, $first_name, $last_name, $email);
     $stmt->store_result();
 
     $result = array();
@@ -133,7 +135,7 @@ class UserQuery {
                         'utype_id' => $utype_id,
                         'utype_description' => $utype_description,
                         'ustatus_id' => $ustatus_id,
-                        'ustatus_description' => 'broken',
+                        'ustatus_description' => $ustatus_description,
                         'first_name' => $first_name,
                         'last_name' => $last_name,
                         'email' => $email,

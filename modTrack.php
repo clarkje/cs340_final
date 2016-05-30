@@ -56,7 +56,7 @@ if (isset($_REQUEST['action'])) {
 		case "updateTrack":
 
 			$error = $trackQuery->updateTrack($_REQUEST['track_id'],
-				$_REQUEST['track_genre_id'], $_REQUEST['track_name'],
+				$_REQUEST['genre'], $_REQUEST['track_name'],
 				$_REQUEST['track_rel_year'], $_REQUEST['track_num']);
 
 			// The update includes a new artist ID
@@ -115,6 +115,16 @@ $context['total_tracks'] = $result[0]['total_tracks'];
 $context['tracks'] = $result[0]['tracks'];
 $context['copies'] = $result[0]['copies'];
 $context['track'] = $trackQuery->getTrack($_REQUEST['track_id']);
+
+// Since the template engine is brain-dead, we need to tell it which element to
+// mark as selected in advance.
+if(isset($context['track']) && isset($context['track']['track_genre_id'])) {
+	for ($i = 0; $i < count($context['genres']); $i++) {
+		if($context['genres'][$i]['genre_id'] == $context['track']['track_genre_id']) {
+				$context['genres'][$i]['selected'] = true;
+		}
+	}
+}
 
 // Populate the variables to pass to the template
 
