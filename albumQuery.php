@@ -16,11 +16,10 @@ class AlbumQuery {
     $query = "UPDATE album SET
               artist_id = ?,
               genre_id = ?,
-              album_name = ?,
+              name = ?,
               release_date = ?,
-              total_tracks = ?,
-              WHERE album_id = ?
-    ";
+              total_tracks = ?
+              WHERE album_id = ?";
 
     if(!($stmt = $this->mysqli->prepare($query))){
       echo "Prepare failed: "  . $this->mysqli->errno . " " . $this->mysqli->error;
@@ -28,8 +27,10 @@ class AlbumQuery {
 
     $release_date = $release_year.'-01-01';
 
-    $stmt->bind_param("iissii", $album_id, $artist_id, $genre_id, $album_name,
-              $release_date, $total_tracks);
+    $stmt->bind_param("iissii", $artist_id, $genre_id, $album_name,
+              $release_date, $total_tracks, $album_id);
+
+    $stmt->execute();
 
     if (isset($this->mysqli->error)) {
       return $this->mysqli->error;
