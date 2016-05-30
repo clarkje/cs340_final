@@ -1,8 +1,10 @@
 <fieldset>
-  <legend>Update Artist</legend>
+  <legend>{{#artist}}Update{{/artist}}{{^artist}}Add{{/artist}} Artist</legend>
   <form method="post" action="modArtist.php" class="form-horizontal">
-    <input type="hidden" name="action" value="updateArtist">
+    <input type="hidden" name="action" value="{{#artist}}updateArtist{{/artist}}{{^artist}}addArtist{{/artist}}">
+    {{#artist}}
     <input type="hidden" name="artist_id" value="{{artist_id}}">
+    {{/artist}}
 
     <div class="form-group">
       <label class="col-sm-2 control-label" for="artist_name">Name</label>
@@ -13,7 +15,7 @@
 
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-9">
-        <input type="submit" class="btn btn-primary btn-sm" value="Update Artist">
+        <input type="submit" class="btn btn-primary btn-sm" value="{{#artist}}Update{{/artist}}{{^artist}}Add{{/artist}} Artist">
       </div>
       <div class="col-sm-1">
         <a href="modArtist.php?action=deleteArtist&artist_id={{artist.artist_id}}" class="btn btn-danger btn-sm">Delete Artist</a>

@@ -1,8 +1,10 @@
 <fieldset>
-  <legend>Update Composer</legend>
+  <legend>{{#composer}}Update{{/composer}}{{^composer}}Add{{/composer}} Composer</legend>
   <form method="post" action="modComposer.php" class="form-horizontal">
-    <input type="hidden" name="action" value="updateComposer">
+    <input type="hidden" name="action" value="{{#composer}}updateComposer{{/composer}}{{^composer}}addComposer{{/composer}}">
+    {{#composer}}
     <input type="hidden" name="composer_id" value="{{composer.composer_id}}">
+    {{/composer}}
 
     <div class="form-group">
       <label class="col-sm-2 control-label" for="composer_first_name">First Name</label>
@@ -18,11 +20,9 @@
       </div>
     </div>
 
-
-
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-9">
-        <input type="submit" class="btn btn-primary btn-sm" value="Update Composer">
+        <input type="submit" class="btn btn-primary btn-sm" value="{{#composer}}Update{{/composer}}{{^composer}}Add{{/composer}} Composer">
       </div>
       <div class="col-sm-1">
         <a href="modComposer.php?action=deleteComposer&composer_id={{composer.composer_id}}" class="btn btn-danger btn-sm">Delete Composer</a>

@@ -1,0 +1,52 @@
+<h3>Users</h3>
+
+<p>Showing {{offset_begin}} - {{offset_end}} of {{total_results}} Users </p>
+<nav>
+  <ul class="pagination">
+    <li>
+      <a href="modUser.php?offset={{^offset_previous}}0{{/offset_previous}}{{offset_previous}}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {{#pages}}
+    <li {{#selected}}class="active"{{/selected}}><a href="modArtist.php?offset={{offset}}">{{number}}</a></li>
+    {{/pages}}
+    <li>
+      {{#offset_next}}
+      <a href="modUser.php?offset={{offset_next}}" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+      {{/offset_next}}
+    </li>
+  </ul>
+</nav>
+
+<table class="table">
+  <thead>
+      <td>&nbsp;</td>
+      <td>First Name</td>
+      <td>Last Name</td>
+      <td>Email</td>
+      <td>Type</td>
+      <td>Status</td>
+      <td>Fines</td>
+    </thead>
+    {{^users}}
+      <tr>
+        <td colspan="6">No Records Found</td>
+      </tr>
+    {{/users}}
+    {{#users}}
+    <tbody class="table-hover">
+      <tr>
+        <td><a href="modUser.php?action=editUser&user_id={{user_id}}" class="btn btn-default">Edit</a></td>
+        <td>{{first_name}}</td>
+        <td>{{last_name}}</td>
+        <td>{{email}}</td>
+        <td>{{utype_description}}</td>
+        <td>{{ustatus_description}}</td>
+        <td>{{user_fines}}</td>
+        </tr>
+    </tbody>
+    {{/users}}
+</table>
