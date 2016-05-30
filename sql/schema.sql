@@ -12,7 +12,6 @@ CREATE TABLE artist (
   name VARCHAR(255) NOT NULL
 );
 
-
 CREATE TABLE genre (
   genre_id INT(4) PRIMARY KEY AUTO_INCREMENT,
   description varchar(255)
@@ -24,7 +23,6 @@ CREATE TABLE composer (
   last_name varchar(128),
   CHECK (first_name IS NOT NULL OR last_name IS NOT NULL)
 );
-
 
 -- An album has a headlining artist and genre
 -- Individual tracks may have distinct artist and genre values that differ
@@ -80,7 +78,6 @@ CREATE TABLE track_artist (
   FOREIGN KEY (artist_id) REFERENCES artist (artist_id)
 );
 
-
 -- TODO: BUG - You shouldn't be able to insert the same composer/track pair multiple times --
 -- Code Fixed, AK
 CREATE TABLE track_composer (
@@ -99,17 +96,8 @@ CREATE TABLE utype (
 
 -- Possible status: Active / Inactive / Blocked / Fine - Fine Amt.
 CREATE TABLE ustatus (
-  ustatus_id INT(2),
+  ustatus_id INT(2) PRIMARY KEY AUTO_INCREMENT, 
   description VARCHAR(255)
-);
-
--- User's acutal status and outstanding fine amount, if any
-CREATE TABLE user_ustatus (
-  user_id INT(16) NOT NULL,
-  ustatus_id INT(2) NOT NULL,
-  fine DECIMAL(5,2),
-  FOREIGN KEY (user_id) REFERENCES user (user_id),
-  FOREIGN KEY (ustatus_id) REFERENCES ustatus (ustatus_id)
 );
 
 -- Library Users
@@ -121,9 +109,10 @@ CREATE TABLE user (
   first_name VARCHAR(128) NOT NULL,
   last_name VARCHAR(128) NOT NULL,
   email VARCHAR(255) NOT NULL,
-  FOREIGN KEY (utype_id) REFERENCES utype (utype_id)
+  fine DECIMAL(5,2),
+  FOREIGN KEY (utype_id) REFERENCES utype (utype_id),
+  FOREIGN KEY (ustatus_id) REFERENCES ustatus (ustatus_id)
 );
-
 
 -- An album's lending history
 CREATE TABLE ainstance_user (
