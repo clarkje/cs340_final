@@ -1,0 +1,44 @@
+<h3>Composers</h3>
+
+<p>Showing {{offset_begin}} - {{offset_end}} of {{total_results}} Composers</p>
+<nav>
+  <ul class="pagination">
+    <li>
+      <a href="modComposer.php?offset={{^offset_previous}}0{{/offset_previous}}{{offset_previous}}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {{#pages}}
+    <li {{#selected}}class="active"{{/selected}}><a href="modComposer.php?offset={{offset}}">{{number}}</a></li>
+    {{/pages}}
+    <li>
+      {{#offset_next}}
+      <a href="modComposer.php?offset={{offset_next}}" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+      {{/offset_next}}
+    </li>
+  </ul>
+</nav>
+
+<table class="table">
+  <thead>
+      <td>&nbsp;</td>
+      <td>First Name</td>
+      <td>Last Name</td>
+    </thead>
+    {{^composers}}
+      <tr>
+        <td colspan="3">No Records Found</td>
+      </tr>
+    {{/composers}}
+    {{#composers}}
+    <tbody class="table-hover">
+      <tr>
+        <td><a href="modComposer.php?action=editComposer&composer_id={{composer_id}}" class="btn btn-default">Edit</a></td>
+        <td>{{composer_first_name}}</td>
+        <td>{{composer_last_name}}</td>
+        </tr>
+    </tbody>
+    {{/composers}}
+</table>
