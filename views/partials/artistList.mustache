@@ -1,0 +1,42 @@
+<h3>Artists</h3>
+
+<p>Showing {{offset_begin}} - {{offset_end}} of {{total_results}} Artists</p>
+<nav>
+  <ul class="pagination">
+    <li>
+      <a href="modArtist.php?offset={{^offset_previous}}0{{/offset_previous}}{{offset_previous}}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {{#pages}}
+    <li {{#selected}}class="active"{{/selected}}><a href="modArtist.php?offset={{offset}}">{{number}}</a></li>
+    {{/pages}}
+    <li>
+      {{#offset_next}}
+      <a href="modArtist.php?offset={{offset_next}}" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+      {{/offset_next}}
+    </li>
+  </ul>
+</nav>
+
+<table class="table">
+  <thead>
+      <td>&nbsp;</td>
+      <td>Name</td>
+    </thead>
+    {{^artists}}
+      <tr>
+        <td colspan="3">No Records Found</td>
+      </tr>
+    {{/artists}}
+    {{#artists}}
+    <tbody class="table-hover">
+      <tr>
+        <td><a href="modArtist.php?action=editArtist&artist_id={{artist_id}}" class="btn btn-default">Edit</a></td>
+        <td>{{artist_name}}</td>
+        </tr>
+    </tbody>
+    {{/artists}}
+</table>
