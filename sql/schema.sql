@@ -96,7 +96,7 @@ CREATE TABLE utype (
 
 -- Possible status: Active / Inactive / Blocked / Fine - Fine Amt.
 CREATE TABLE ustatus (
-  ustatus_id INT(2) PRIMARY KEY AUTO_INCREMENT, 
+  ustatus_id INT(2) PRIMARY KEY AUTO_INCREMENT,
   description VARCHAR(255)
 );
 
@@ -113,6 +113,9 @@ CREATE TABLE user (
   FOREIGN KEY (utype_id) REFERENCES utype (utype_id),
   FOREIGN KEY (ustatus_id) REFERENCES ustatus (ustatus_id)
 );
+
+-- TODO: Can we ensure through MySQL constraints that the same album isn't checked
+-- out multiple times, while still retaining history?
 
 -- An album's lending history
 CREATE TABLE ainstance_user (

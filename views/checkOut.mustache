@@ -1,0 +1,33 @@
+{{> above}}
+
+<script>
+$(function() {
+  $("#user").autocomplete({
+    source: "userSearch.php",
+    minLength: 1,
+    select: function( event, ui ) {
+  		// Use preventDefault to prevent the value from showing in the textfield
+  		// http://stackoverflow.com/questions/7642855/autocomplete-applying-value-not-label-to-textbox
+  		event.preventDefault();
+  		$("#user").val(ui.item.label);
+  		$("#user_id").val(ui.item.value);
+    },
+  	focus: function(event, ui) {
+  		event.preventDefault();
+  		$("#user").val(ui.item.label);
+  	}
+  });
+});
+</script>
+
+<!-- BEGIN checkOut.mustache -->
+</head>
+
+<div class="container">
+  {{{alert}}}
+  {{>checkoutForm}}
+  <br><br>
+  {{>albumList}}
+</div>
+<!-- END checkOut.mustache -->
+{{> below}}

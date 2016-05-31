@@ -3,6 +3,7 @@
     <td>Copy ID</td>
     <td>Location</td>
     <td>Status<td>
+    <td>&nbsp;</td>
   </thead>
 {{^copies}}
   <tr>
@@ -14,6 +15,7 @@
     <td>{{ainstance_id}}</td>
     <td>{{ainstance_location}}</td>
     <td>{{astatus_description}}</td>
+    <td><a href="checkOut.php?ainstance_id={{ainstance_id}}" class="btn btn-default">Check Out</a></td>
   </tr>
 {{/copies}}
 </table>

@@ -10,7 +10,7 @@ class AlbumInstanceQuery {
 
   function getAlbumInstance($ainstance_id) {
 
-    $query = "SELECT ainstance.ainstance_id, ainstance.astatus_id,
+    $query = "SELECT ainstance.ainstance_id, ainstance.album_id, ainstance.astatus_id,
                      astatus.description, ainstance.location
               FROM ainstance
               INNER JOIN astatus ON ainstance.astatus_id = astatus.astatus_id
@@ -22,11 +22,12 @@ class AlbumInstanceQuery {
 
     $stmt->bind_param("i", $ainstance_id);
     $stmt->execute();
-    $stmt->bind_result($ainstance_id, $astatus_id, $astatus_description,
+    $stmt->bind_result($ainstance_id, $album_id, $astatus_id, $astatus_description,
                        $ainstance_location);
 
     while($stmt->fetch()) {
       $result = array(
+        'album_id' => $album_id,
         'ainstance_id' => $ainstance_id,
         'astatus_id' => $astatus_id,
         'astatus_description' => $astatus_description,

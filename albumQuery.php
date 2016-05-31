@@ -211,5 +211,46 @@ class AlbumQuery {
       return $result;
     }
   }
+
+  function checkOut($ainstance_id, $user_id, $lendingPeriod) {
+
+    $checkOut =  date("Y-m-d", mktime(0, 0, 0, date("m")  , date("d")+1, date("Y")));
+    $dueBy = date("Y-m-d", mktime(0,0,0, date("m") ,date("d")+$lendingPeriod, date("Y")));
+
+    // Check the album instance out
+    $query = "INSERT INTO
+              ainstance_user
+              (ainstance_id, user_id, checked_out, due_by)
+              VALUES
+              (?,?,?,?)";
+
+    if(!($stmt = $this->mysqli->prepare($query))){
+      echo "Prepare failed: "  . $this->mysqli->errno . " " . $this->mysqli->error;
+    }
+
+    $stmt->bind_param("iiss", $album_id, $user_id, $checkOut, $dueBy);
+    $stmt->execute();
+    $stmt->close();
+
+    // Set the instance status to checked out
+    $query = "UPDATE ainstance SET
+              ainstance.astatus_id = (SELECT astatus_id FROM astatus
+                                      WHERE description = 'Checked Out')
+              WHERE ainstance_id = ?";
+
+    if(!($stmt = $this->mysqli->prepare($query))){
+      echo "Prepare failed: "  . $this->mysqli->errno . " " . $this->mysqli->error;
+    }
+
+    $stmt->bind_param("i", $ainstance_id);
+    $stmt->execute();
+    $stmt->close();
+
+    if($this->mysqli->error) {
+      return null;
+    } else {
+      return $result;
+    }
+  }
 }
 ?>
