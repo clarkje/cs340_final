@@ -149,37 +149,39 @@ if (isset($_REQUEST['action'])) {
 }
 
 // Populate the form with existing data
-$result = $albumQuery->getAlbum($_REQUEST['album_id']);
-$copy_result = $albumQuery->getCopies($_REQUEST['album_id']);
+if(isset($_REQUEST['album_id'])) {
+	$result = $albumQuery->getAlbum($_REQUEST['album_id']);
+	$copy_result = $albumQuery->getCopies($_REQUEST['album_id']);
 
-// Populate the variables to pass to the template
-$context['album_id'] = $result[0]['album_id'];
-$context['album_name'] = $result[0]['album_name'];
-$context['artist_id'] = $result[0]['artist_id'];
-$context['artist_name'] = $result[0]['artist_name'];
-$context['genre_id'] = $result[0]['genre_id'];
-$context['release_date'] = $result[0]['release_date'];
-$context['rel_year'] = $result[0]['rel_year'];
-$context['total_tracks'] = $result[0]['total_tracks'];
-$context['tracks'] = $result[0]['tracks'];
-$context['copies'] = $result[0]['copies'];
+	// Populate the variables to pass to the template
+	$context['album_id'] = $result[0]['album_id'];
+	$context['album_name'] = $result[0]['album_name'];
+	$context['artist_id'] = $result[0]['artist_id'];
+	$context['artist_name'] = $result[0]['artist_name'];
+	$context['genre_id'] = $result[0]['genre_id'];
+	$context['release_date'] = $result[0]['release_date'];
+	$context['rel_year'] = $result[0]['rel_year'];
+	$context['total_tracks'] = $result[0]['total_tracks'];
+	$context['tracks'] = $result[0]['tracks'];
+	$context['copies'] = $result[0]['copies'];
 
-/*
-Since the template engine is brain-dead, we need to tell it which element to
-mark as selected in advance.  In this instance, we want the Add Track form
-to default to the genre of the parent album.
-*/
+	/*
+	Since the template engine is brain-dead, we need to tell it which element to
+	mark as selected in advance.  In this instance, we want the Add Track form
+	to default to the genre of the parent album.
+	*/
 
-if(isset($context['genre_id'])) {
-	for ($i = 0; $i < count($context['genres']); $i++) {
-		if($context['genres'][$i]['genre_id'] == $context['genre_id']) {
-				$context['genres'][$i]['selected'] = true;
+	if(isset($context['genre_id'])) {
+		for ($i = 0; $i < count($context['genres']); $i++) {
+			if($context['genres'][$i]['genre_id'] == $context['genre_id']) {
+					$context['genres'][$i]['selected'] = true;
+			}
 		}
 	}
-}
 
-if (isset($alert)) {
-	$context['alert'] = $alert;
+	if (isset($alert)) {
+		$context['alert'] = $alert;
+	}
 }
 
 echo $tpl->render($context);
