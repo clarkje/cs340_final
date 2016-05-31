@@ -42,10 +42,12 @@ require_once('AlbumStatusQuery.php');
 $astatus = new AlbumStatusQuery($mysqli);
 $context['astatus'] = $astatus->getStatus();
 
+require_once('AlbumQuery.php');
+$albumQuery = new AlbumQuery($mysqli);
+
+
 // We're modifying data, include the accessor class
 if (isset($_REQUEST['action'])) {
-	require_once('AlbumQuery.php');
-	$albumQuery = new AlbumQuery($mysqli);
 
 	// $_REQUEST is the method agnostic version of $_GET or $_POST
 	switch($_REQUEST['action']) {
