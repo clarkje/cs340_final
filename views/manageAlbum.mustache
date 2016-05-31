@@ -57,12 +57,15 @@
 <div class="container">
   {{{alert}}}
   {{>albumForm}}
+
+  {{#album_id}}
   <br><br>
   {{>trackList}}
   {{>addTrack}}
   <br><br>
   {{>copyList}}
   {{>addCopy}}
+  {{/album_id}}
 </div>
 <!-- END manageAlbum.mustache -->
 {{> below}}
